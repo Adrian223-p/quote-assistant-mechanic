@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Bay 1 — Owner Quote Console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,7 @@
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 0; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
-
+ 
   .app {
     display: grid;
     grid-template-columns: 280px 1fr 320px;
@@ -37,7 +37,7 @@
     height: 100vh;
     width: 100vw;
   }
-
+ 
   .topbar {
     grid-column: 1 / -1;
     background: var(--bg-panel);
@@ -74,7 +74,7 @@
     animation: pulse 2s infinite;
   }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
+ 
   .sidebar {
     background: var(--bg-panel); border-right: 1px solid var(--line);
     overflow-y: auto; padding: 20px 16px;
@@ -104,7 +104,7 @@
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
     color: var(--text-faint); line-height: 1.6;
   }
-
+ 
   .chat { display: flex; flex-direction: column; background: var(--bg); overflow: hidden; }
   .chat-header {
     padding: 20px 32px; border-bottom: 1px solid var(--line);
@@ -119,7 +119,7 @@
     color: var(--text-dim); letter-spacing: 1px;
   }
   .chat-subtitle .amber { color: var(--amber); }
-
+ 
   .messages { flex: 1; overflow-y: auto; padding: 32px; scroll-behavior: smooth; }
   .message { max-width: 820px; margin: 0 auto 24px; animation: fadeIn 0.3s ease; }
   @keyframes fadeIn {
@@ -177,7 +177,7 @@
     background: var(--bg-elev); padding: 2px 6px; border-radius: 2px; color: var(--amber);
   }
   .msg-bubble hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
-
+ 
   .input-row {
     padding: 16px 32px 24px; border-top: 1px solid var(--line); background: var(--bg-panel);
   }
@@ -215,7 +215,7 @@
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
     color: var(--text-faint); letter-spacing: 1px; text-align: right;
   }
-
+ 
   .settings {
     background: var(--bg-panel); border-left: 1px solid var(--line);
     overflow-y: auto; padding: 20px 16px;
@@ -248,7 +248,7 @@
     margin-top: 12px; text-transform: uppercase;
   }
   .clear-btn:hover { color: var(--red); border-color: var(--red); }
-
+ 
   .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
   .typing span {
     width: 6px; height: 6px; border-radius: 50%;
@@ -260,9 +260,45 @@
     0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
     30% { transform: translateY(-4px); opacity: 1; }
   }
-
-  @media (max-width: 1100px) { .app { grid-template-columns: 240px 1fr; } .settings { display: none; } }
-  @media (max-width: 750px) { .app { grid-template-columns: 1fr; } .sidebar { display: none; } }
+ 
+  @media (max-width: 1100px) {
+    .app { grid-template-columns: 240px 1fr; }
+    .settings { display: none; }
+  }
+  @media (max-width: 750px) {
+    .app { grid-template-columns: 1fr; grid-template-rows: 48px 1fr; height: 100dvh; }
+    .sidebar { display: none; }
+    .topbar { padding: 0 14px; }
+    .brand-sub { display: none; }
+    .chat-header { padding: 12px 16px; }
+    .chat-title { font-size: 16px; }
+    .chat-subtitle { font-size: 10px; }
+    .messages { padding: 16px; }
+    .message { margin-bottom: 16px; }
+    .msg-bubble { padding: 12px 14px; font-size: 13px; }
+    .msg-bubble table { font-size: 11px; }
+    .msg-bubble th, .msg-bubble td { padding: 6px 7px; }
+    .input-row { padding: 10px 14px calc(env(safe-area-inset-bottom) + 14px) 14px; }
+    .input-wrap { gap: 8px; }
+    .input-label { display: none; }
+    textarea#input {
+      min-height: 48px;
+      max-height: 140px;
+      font-size: 16px; /* prevents iOS auto-zoom */
+      padding: 12px;
+    }
+    .send-btn {
+      height: 48px;
+      min-width: 72px;
+      padding: 0 14px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      -webkit-tap-highlight-color: rgba(244, 168, 37, 0.3);
+      touch-action: manipulation;
+    }
+    .send-btn span { display: none; }
+    .input-hint { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -278,7 +314,7 @@
       <span id="status-text">Connecting…</span>
     </div>
   </header>
-
+ 
   <aside class="sidebar">
     <div class="section-label">Quick Jobs</div>
     <button class="quick-item" data-prompt="2020 Toyota Camry 2.5L, front brake pads and rotors, aftermarket parts, no rush.">
@@ -313,14 +349,14 @@
       Timing belt + water pump
       <span class="quick-sub">bundle</span>
     </button>
-
+ 
     <div class="section-label">Tips</div>
     <div class="sidebar-footer">
       Every quote is generated from a fresh read of your Google Sheet — update the sheet and the next quote reflects it.<br/><br/>
       Include: year, make, model, engine, and the job. Mention rust belt or seized fasteners if known. Ask for parts tier (OEM/Aftermarket/Reman) if you care.
     </div>
   </aside>
-
+ 
   <main class="chat">
     <div class="chat-header">
       <div class="chat-title">Quote Session</div>
@@ -341,10 +377,10 @@
       <div class="input-hint">Enter to send · Shift+Enter for newline</div>
     </div>
   </main>
-
+ 
   <aside class="settings">
     <div class="section-label">Live Shop Settings</div>
-
+ 
     <div class="setting">
       <label>Standard Rate / hr</label>
       <div class="value" id="v-std">—</div>
@@ -377,9 +413,9 @@
         <div class="value" id="v-hst">—</div>
       </div>
     </div>
-
+ 
     <button class="sync-btn" id="sync">Sync From Sheet</button>
-
+ 
     <div class="section-label">Session</div>
     <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); line-height: 1.7;">
       Quotes this session:&nbsp;<span id="quote-count" style="color: var(--amber);">0</span><br/>
@@ -388,18 +424,12 @@
       Currency:&nbsp;CAD<br/>
       Source:&nbsp;Live Google Sheet
     </div>
-
+ 
     <button class="clear-btn" id="clear">Clear Session</button>
   </aside>
 </div>
-
+ 
 <script>
-/* =====================================================================
-   Bay 1 — Owner Quote Console (frontend)
-   Talks to the Flask backend at /api/*. The system prompt is built
-   server-side from a live read of the owner's Google Sheet.
-   ===================================================================== */
-
 const messagesEl   = document.getElementById('messages');
 const inputEl      = document.getElementById('input');
 const sendBtn      = document.getElementById('send');
@@ -408,22 +438,21 @@ const clearBtn     = document.getElementById('clear');
 const quoteCountEl = document.getElementById('quote-count');
 const lastTotalEl  = document.getElementById('last-total');
 const statusText   = document.getElementById('status-text');
-
+ 
 let quoteCount = 0;
 const conversation = [];
-
-/* ---------------------------- utilities ---------------------------- */
+ 
 function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
-
+ 
 function renderMarkdown(md) {
   let html = md;
   html = html.replace(/^###\s+(.+)$/gm, '<h3>$1</h3>');
   html = html.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
   html = html.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
   html = html.replace(/^---+\s*$/gm, '<hr>');
-
+ 
   html = html.replace(/((?:^\|.*\|\s*\n)+)/gm, (block) => {
     const lines = block.trim().split('\n');
     if (lines.length < 2) return block;
@@ -445,7 +474,7 @@ function renderMarkdown(md) {
     out += '</tbody></table>';
     return out;
   });
-
+ 
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
   html = html.replace(/((?:^[-*]\s+.+\n?)+)/gm, (block) => {
@@ -458,7 +487,7 @@ function renderMarkdown(md) {
   }).join('\n');
   return html;
 }
-
+ 
 function addMessage(role, content, typing = false) {
   const el = document.createElement('div');
   el.className = 'message';
@@ -481,7 +510,7 @@ function addMessage(role, content, typing = false) {
   messagesEl.scrollTop = messagesEl.scrollHeight;
   return bubble;
 }
-
+ 
 function addSystemNote(text) {
   const el = document.createElement('div');
   el.className = 'message';
@@ -492,13 +521,12 @@ function addSystemNote(text) {
   messagesEl.appendChild(el);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
-
+ 
 function extractGrandTotal(text) {
   const m = text.match(/GRAND\s+TOTAL[^$]*\$\s*([\d,]+\.\d{2})/i);
   return m ? `$${m[1]}` : null;
 }
-
-/* ---------------------------- settings sync ---------------------------- */
+ 
 async function syncSettings() {
   try {
     statusText.textContent = 'Reading sheet…';
@@ -506,7 +534,7 @@ async function syncSettings() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const c = await res.json();
     if (c.error) throw new Error(c.error);
-
+ 
     document.getElementById('v-std').textContent    = `$${(+c.std_rate).toFixed(2)}`;
     document.getElementById('v-spec').textContent   = `$${(+c.spec_rate).toFixed(2)}`;
     document.getElementById('v-diag').textContent   = `$${(+c.diag_fee).toFixed(2)}`;
@@ -514,52 +542,50 @@ async function syncSettings() {
     document.getElementById('v-supplies').textContent = `${(+c.supplies_pct * 100).toFixed(1)}%`;
     document.getElementById('v-cap').textContent    = `$${(+c.supplies_cap).toFixed(2)}`;
     document.getElementById('v-hst').textContent    = `${(+c.hst * 100).toFixed(1)}%`;
-
+ 
     statusText.textContent = 'Online · Sheet synced';
   } catch (err) {
     statusText.textContent = 'Offline · Sheet error';
     console.error('Sync error:', err);
   }
 }
-
-/* ---------------------------- chat ---------------------------- */
+ 
 async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text) return;
-
+ 
   inputEl.value = '';
   inputEl.style.height = 'auto';
   sendBtn.disabled = true;
-
+ 
   addMessage('user', text);
   conversation.push({ role: 'user', content: text });
-
+ 
   const bubble = addMessage('assistant', '', true);
-
+ 
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: conversation }),
     });
-
+ 
     if (!res.ok) {
       const errText = await res.text();
       throw new Error(`API ${res.status}: ${errText.slice(0, 200)}`);
     }
-
+ 
     const data = await res.json();
     if (data.error) throw new Error(data.error);
-
+ 
     const reply = (data.content || [])
       .filter(c => c.type === 'text')
       .map(c => c.text)
       .join('\n') || '(empty response)';
-
+ 
     conversation.push({ role: 'assistant', content: reply });
     bubble.innerHTML = renderMarkdown(reply);
-
-    // Track + log quote
+ 
     const total = extractGrandTotal(reply);
     if (total) {
       quoteCount++;
@@ -575,14 +601,14 @@ async function sendMessage() {
     inputEl.focus();
   }
 }
-
+ 
 function logQuote(userText, reply, total) {
   const vehicle = (reply.match(/QUOTE:\s*([^\n]+)/) || [, ''])[1].trim();
   const labour  = (reply.match(/Labour subtotal[^$]*\$\s*([\d,]+\.\d{2})/) || [, ''])[1];
   const parts   = (reply.match(/Parts subtotal[^$]*\$\s*([\d,]+\.\d{2})/)  || [, ''])[1];
   const fees    = (reply.match(/Fees subtotal[^$]*\$\s*([\d,]+\.\d{2})/)   || [, ''])[1];
   const hst     = (reply.match(/HST[^$]*\$\s*([\d,]+\.\d{2})/)             || [, ''])[1];
-
+ 
   fetch('/api/log-quote', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -594,8 +620,7 @@ function logQuote(userText, reply, total) {
     }),
   }).catch(err => console.error('log-quote failed:', err));
 }
-
-/* ---------------------------- interactions ---------------------------- */
+ 
 sendBtn.addEventListener('click', sendMessage);
 syncBtn.addEventListener('click', () => {
   syncSettings();
@@ -625,26 +650,25 @@ clearBtn.addEventListener('click', () => {
   lastTotalEl.textContent = '—';
   showWelcome();
 });
-
+ 
 function showWelcome() {
   addSystemNote('Bay 1 initialized · Ontario · Reading live Google Sheet on every quote');
   addMessage('assistant',
 `## Ready to quote.
-
+ 
 Describe any repair and I'll return a full itemized estimate — **labour, parts, fees, and HST** — using your **live Google Sheet** data. Edit the sheet and the next quote reflects it instantly.
-
+ 
 **Include in your message:**
 - Year, make, model, engine
 - The job (as specific as you can — "front brake pads + rotors" beats "brakes")
 - Parts preference: **OEM**, **Aftermarket**, or **Reman** (default: Aftermarket)
 - Flags: rust-belt, rush job, European luxury, EV/hybrid
-
+ 
 Or click a **Quick Job** on the left to auto-fill a common request.
-
+ 
 **End of setup.**`);
 }
-
-/* ---------------------------- boot ---------------------------- */
+ 
 syncSettings();
 showWelcome();
 inputEl.focus();
