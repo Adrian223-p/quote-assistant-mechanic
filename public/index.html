@@ -29,7 +29,7 @@
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 0; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
- 
+
   .app {
     display: grid;
     grid-template-columns: 280px 1fr 320px;
@@ -37,7 +37,7 @@
     height: 100vh;
     width: 100vw;
   }
- 
+
   .topbar {
     grid-column: 1 / -1;
     background: var(--bg-panel);
@@ -74,7 +74,7 @@
     animation: pulse 2s infinite;
   }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
- 
+
   .sidebar {
     background: var(--bg-panel); border-right: 1px solid var(--line);
     overflow-y: auto; padding: 20px 16px;
@@ -104,7 +104,7 @@
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
     color: var(--text-faint); line-height: 1.6;
   }
- 
+
   .chat { display: flex; flex-direction: column; background: var(--bg); overflow: hidden; }
   .chat-header {
     padding: 20px 32px; border-bottom: 1px solid var(--line);
@@ -119,7 +119,7 @@
     color: var(--text-dim); letter-spacing: 1px;
   }
   .chat-subtitle .amber { color: var(--amber); }
- 
+
   .messages { flex: 1; overflow-y: auto; padding: 32px; scroll-behavior: smooth; }
   .message { max-width: 820px; margin: 0 auto 24px; animation: fadeIn 0.3s ease; }
   @keyframes fadeIn {
@@ -177,7 +177,47 @@
     background: var(--bg-elev); padding: 2px 6px; border-radius: 2px; color: var(--amber);
   }
   .msg-bubble hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
- 
+
+  /* Invoice button that appears under every quote */
+  .quote-actions {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    background: transparent;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    padding: 8px 16px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .action-btn:hover {
+    background: var(--amber);
+    color: var(--bg);
+  }
+  .action-btn.secondary {
+    border-color: var(--line-strong);
+    color: var(--text-dim);
+  }
+  .action-btn.secondary:hover {
+    border-color: var(--text-dim);
+    color: var(--text);
+    background: transparent;
+  }
+
   .input-row {
     padding: 16px 32px 24px; border-top: 1px solid var(--line); background: var(--bg-panel);
   }
@@ -215,7 +255,7 @@
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
     color: var(--text-faint); letter-spacing: 1px; text-align: right;
   }
- 
+
   .settings {
     background: var(--bg-panel); border-left: 1px solid var(--line);
     overflow-y: auto; padding: 20px 16px;
@@ -231,6 +271,13 @@
     font-family: 'JetBrains Mono', monospace; font-size: 13px;
     border-radius: 2px;
   }
+  .setting input {
+    width: 100%; background: var(--bg-elev); border: 1px solid var(--line);
+    color: var(--text); padding: 8px 10px;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    border-radius: 2px; outline: none;
+  }
+  .setting input:focus { border-color: var(--amber); }
   .setting-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .sync-btn {
     width: 100%; background: transparent; border: 1px solid var(--amber);
@@ -248,7 +295,7 @@
     margin-top: 12px; text-transform: uppercase;
   }
   .clear-btn:hover { color: var(--red); border-color: var(--red); }
- 
+
   .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
   .typing span {
     width: 6px; height: 6px; border-radius: 50%;
@@ -260,7 +307,292 @@
     0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
     30% { transform: translateY(-4px); opacity: 1; }
   }
- 
+
+  /* =============== MODAL =============== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--bg-panel);
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+  .modal-close {
+    background: transparent; border: none; color: var(--text-dim);
+    font-size: 24px; cursor: pointer; padding: 0; line-height: 1;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-body {
+    padding: 20px 24px;
+  }
+  .modal-body .setting { margin-bottom: 14px; }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  /* =============== INVOICE (light theme for printing) =============== */
+  .invoice-view {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #f5f4ef;
+    color: #1a1a1a;
+    z-index: 2000;
+    overflow-y: auto;
+  }
+  .invoice-view.active { display: block; }
+  .invoice-toolbar {
+    position: sticky; top: 0;
+    background: #1f2124;
+    color: #e8e6e1;
+    padding: 12px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid #3a3d42;
+    z-index: 10;
+  }
+  .invoice-toolbar .meta {
+    margin-right: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .invoice-toolbar button {
+    background: var(--amber); color: var(--bg); border: none;
+    padding: 8px 16px; font-family: 'Oswald', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; cursor: pointer; border-radius: 2px;
+  }
+  .invoice-toolbar button.secondary {
+    background: transparent; border: 1px solid var(--line-strong); color: var(--text-dim);
+  }
+  .invoice-toolbar button.secondary:hover { color: var(--text); border-color: var(--text-dim); }
+
+  .invoice-paper {
+    max-width: 820px;
+    margin: 32px auto;
+    background: #fff;
+    padding: 56px 56px 64px;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.2);
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    line-height: 1.5;
+  }
+  .invoice-paper h1, .invoice-paper h2 {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 24px;
+    border-bottom: 3px solid #1a1a1a;
+    margin-bottom: 32px;
+  }
+  .inv-brand { display: flex; align-items: center; gap: 14px; }
+  .inv-brand-mark {
+    width: 48px; height: 48px;
+    background: #1a1a1a; color: #f4a825;
+    display: grid; place-items: center;
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 22px;
+    clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
+  }
+  .inv-brand h1 { font-size: 28px; margin-bottom: 2px; color: #1a1a1a; }
+  .inv-brand .shop-info {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.5;
+  }
+  .inv-title {
+    text-align: right;
+  }
+  .inv-title h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+  .inv-title .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    line-height: 1.8;
+  }
+  .inv-title .meta strong { color: #1a1a1a; }
+
+  .inv-parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .inv-party h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ddd;
+  }
+  .inv-party .party-line {
+    font-size: 13px;
+    margin: 2px 0;
+  }
+  .inv-party .party-name {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .inv-section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    margin: 24px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #1a1a1a;
+  }
+  .inv-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+  .inv-table th {
+    background: #f0ede5;
+    color: #1a1a1a;
+    padding: 10px 12px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .inv-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+  }
+  .inv-table td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+
+  .inv-totals {
+    margin-left: auto;
+    width: 360px;
+    margin-top: 24px;
+  }
+  .inv-totals .total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+  }
+  .inv-totals .total-row.grand {
+    background: #1a1a1a;
+    color: #f4a825;
+    padding: 14px 12px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: none;
+    margin-top: 8px;
+  }
+  .inv-totals .total-row .num {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .inv-notes {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .inv-notes h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .inv-notes ul { margin-left: 18px; }
+  .inv-notes li { margin: 4px 0; }
+
+  .inv-signature {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .inv-signature .sig-block {
+    border-top: 1px solid #1a1a1a;
+    padding-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #666;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; overflow: visible; }
+    .app, .modal-overlay { display: none !important; }
+    .invoice-view { position: static; background: #fff; overflow: visible; }
+    .invoice-toolbar { display: none; }
+    .invoice-paper {
+      margin: 0; padding: 20mm; max-width: 100%;
+      box-shadow: none;
+    }
+  }
+
   @media (max-width: 1100px) {
     .app { grid-template-columns: 240px 1fr; }
     .settings { display: none; }
@@ -282,22 +614,23 @@
     .input-wrap { gap: 8px; }
     .input-label { display: none; }
     textarea#input {
-      min-height: 48px;
-      max-height: 140px;
-      font-size: 16px; /* prevents iOS auto-zoom */
-      padding: 12px;
+      min-height: 48px; max-height: 140px;
+      font-size: 16px; padding: 12px;
     }
     .send-btn {
-      height: 48px;
-      min-width: 72px;
-      padding: 0 14px;
-      font-size: 12px;
-      letter-spacing: 1px;
+      height: 48px; min-width: 72px; padding: 0 14px;
+      font-size: 12px; letter-spacing: 1px;
       -webkit-tap-highlight-color: rgba(244, 168, 37, 0.3);
       touch-action: manipulation;
     }
     .send-btn span { display: none; }
     .input-hint { display: none; }
+    .invoice-paper { margin: 0; padding: 24px 20px; }
+    .inv-header { flex-direction: column; gap: 16px; }
+    .inv-title { text-align: left; }
+    .inv-parties { grid-template-columns: 1fr; gap: 20px; }
+    .inv-totals { width: 100%; }
+    .inv-signature { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -314,7 +647,7 @@
       <span id="status-text">Connecting…</span>
     </div>
   </header>
- 
+
   <aside class="sidebar">
     <div class="section-label">Quick Jobs</div>
     <button class="quick-item" data-prompt="2020 Toyota Camry 2.5L, front brake pads and rotors, aftermarket parts, no rush.">
@@ -349,14 +682,13 @@
       Timing belt + water pump
       <span class="quick-sub">bundle</span>
     </button>
- 
+
     <div class="section-label">Tips</div>
     <div class="sidebar-footer">
-      Every quote is generated from a fresh read of your Google Sheet — update the sheet and the next quote reflects it.<br/><br/>
-      Include: year, make, model, engine, and the job. Mention rust belt or seized fasteners if known. Ask for parts tier (OEM/Aftermarket/Reman) if you care.
+      Every quote is generated from a fresh read of your Google Sheet. Click <strong style="color:var(--amber);">Generate Invoice</strong> under any quote to turn it into a printable invoice.
     </div>
   </aside>
- 
+
   <main class="chat">
     <div class="chat-header">
       <div class="chat-title">Quote Session</div>
@@ -377,10 +709,10 @@
       <div class="input-hint">Enter to send · Shift+Enter for newline</div>
     </div>
   </main>
- 
+
   <aside class="settings">
     <div class="section-label">Live Shop Settings</div>
- 
+
     <div class="setting">
       <label>Standard Rate / hr</label>
       <div class="value" id="v-std">—</div>
@@ -413,9 +745,10 @@
         <div class="value" id="v-hst">—</div>
       </div>
     </div>
- 
+
     <button class="sync-btn" id="sync">Sync From Sheet</button>
- 
+    <button class="sync-btn" id="shop-info-btn" style="margin-top:8px;">Edit Shop Info</button>
+
     <div class="section-label">Session</div>
     <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); line-height: 1.7;">
       Quotes this session:&nbsp;<span id="quote-count" style="color: var(--amber);">0</span><br/>
@@ -424,11 +757,115 @@
       Currency:&nbsp;CAD<br/>
       Source:&nbsp;Live Google Sheet
     </div>
- 
+
     <button class="clear-btn" id="clear">Clear Session</button>
   </aside>
 </div>
- 
+
+<!-- Shop Info modal (for invoice header) -->
+<div class="modal-overlay" id="shop-info-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Shop Info for Invoices</div>
+      <button class="modal-close" id="shop-info-close">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="setting">
+        <label>Shop Name</label>
+        <input type="text" id="shop-name" placeholder="Bay 1 Auto Repair">
+      </div>
+      <div class="setting">
+        <label>Shop Address</label>
+        <input type="text" id="shop-address" placeholder="123 Main Street">
+      </div>
+      <div class="setting-row">
+        <div class="setting">
+          <label>City, Province</label>
+          <input type="text" id="shop-city" placeholder="Toronto, ON">
+        </div>
+        <div class="setting">
+          <label>Postal Code</label>
+          <input type="text" id="shop-postal" placeholder="M5V 0A1">
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting">
+          <label>Phone</label>
+          <input type="text" id="shop-phone" placeholder="(416) 555-0100">
+        </div>
+        <div class="setting">
+          <label>Email</label>
+          <input type="text" id="shop-email" placeholder="info@bay1.ca">
+        </div>
+      </div>
+      <div class="setting">
+        <label>HST Number (optional)</label>
+        <input type="text" id="shop-hst" placeholder="123456789 RT0001">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="action-btn secondary" id="shop-info-cancel">Cancel</button>
+      <button class="action-btn" id="shop-info-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Customer Info modal (asked before generating invoice) -->
+<div class="modal-overlay" id="customer-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Customer Details</div>
+      <button class="modal-close" id="customer-close">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="setting">
+        <label>Customer Name</label>
+        <input type="text" id="cust-name" placeholder="John Smith">
+      </div>
+      <div class="setting">
+        <label>Phone</label>
+        <input type="text" id="cust-phone" placeholder="(416) 555-0100">
+      </div>
+      <div class="setting">
+        <label>Email (optional)</label>
+        <input type="text" id="cust-email" placeholder="john@example.com">
+      </div>
+      <div class="setting">
+        <label>Address (optional)</label>
+        <input type="text" id="cust-address" placeholder="Street, City">
+      </div>
+      <div class="setting-row">
+        <div class="setting">
+          <label>License Plate</label>
+          <input type="text" id="cust-plate" placeholder="ABCD 123">
+        </div>
+        <div class="setting">
+          <label>Odometer (km)</label>
+          <input type="text" id="cust-odo" placeholder="125000">
+        </div>
+      </div>
+      <div class="setting">
+        <label>Invoice Number</label>
+        <input type="text" id="inv-number" placeholder="auto-generated">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="action-btn secondary" id="customer-cancel">Cancel</button>
+      <button class="action-btn" id="customer-generate">Generate Invoice</button>
+    </div>
+  </div>
+</div>
+
+<!-- The rendered invoice view -->
+<div class="invoice-view" id="invoice-view">
+  <div class="invoice-toolbar">
+    <div class="meta" id="invoice-meta"></div>
+    <button class="secondary" id="invoice-back">← Back to Chat</button>
+    <button id="invoice-print">🖨 Print / Save PDF</button>
+  </div>
+  <div class="invoice-paper" id="invoice-paper"></div>
+</div>
+
 <script>
 const messagesEl   = document.getElementById('messages');
 const inputEl      = document.getElementById('input');
@@ -438,21 +875,35 @@ const clearBtn     = document.getElementById('clear');
 const quoteCountEl = document.getElementById('quote-count');
 const lastTotalEl  = document.getElementById('last-total');
 const statusText   = document.getElementById('status-text');
- 
+
 let quoteCount = 0;
 const conversation = [];
- 
+let activeQuoteText = null; // holds the quote being converted to invoice
+
+// Persistent shop info - stored in memory only (no localStorage per artifact rules)
+let shopInfo = {
+  name: 'Bay 1 Auto Repair',
+  address: '',
+  city: 'Toronto, ON',
+  postal: '',
+  phone: '',
+  email: '',
+  hst: ''
+};
+
+/* ------------------------ helpers ------------------------ */
 function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  if (s == null) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
- 
+
 function renderMarkdown(md) {
   let html = md;
   html = html.replace(/^###\s+(.+)$/gm, '<h3>$1</h3>');
   html = html.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
   html = html.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
   html = html.replace(/^---+\s*$/gm, '<hr>');
- 
+
   html = html.replace(/((?:^\|.*\|\s*\n)+)/gm, (block) => {
     const lines = block.trim().split('\n');
     if (lines.length < 2) return block;
@@ -474,7 +925,7 @@ function renderMarkdown(md) {
     out += '</tbody></table>';
     return out;
   });
- 
+
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
   html = html.replace(/((?:^[-*]\s+.+\n?)+)/gm, (block) => {
@@ -487,7 +938,11 @@ function renderMarkdown(md) {
   }).join('\n');
   return html;
 }
- 
+
+function isQuoteReply(text) {
+  return /##\s+QUOTE:/i.test(text) && /GRAND\s+TOTAL/i.test(text);
+}
+
 function addMessage(role, content, typing = false) {
   const el = document.createElement('div');
   el.className = 'message';
@@ -496,12 +951,30 @@ function addMessage(role, content, typing = false) {
   const ts = new Date().toTimeString().slice(0, 5);
   meta.innerHTML = `<span class="role">${role === 'user' ? 'Owner' : 'Bay 1'}</span><span>${ts}</span>`;
   el.appendChild(meta);
+
   const bubble = document.createElement('div');
   bubble.className = `msg-bubble ${role}`;
   if (typing) {
     bubble.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
   } else if (role === 'assistant') {
     bubble.innerHTML = renderMarkdown(content);
+    // If this is a quote response, add action buttons
+    if (isQuoteReply(content)) {
+      const actions = document.createElement('div');
+      actions.className = 'quote-actions';
+      actions.innerHTML = `
+        <button class="action-btn invoice-trigger">📄 Generate Invoice</button>
+        <button class="action-btn secondary copy-trigger">Copy Quote</button>
+      `;
+      bubble.appendChild(actions);
+      actions.querySelector('.invoice-trigger').addEventListener('click', () => startInvoice(content));
+      actions.querySelector('.copy-trigger').addEventListener('click', () => {
+        navigator.clipboard.writeText(content).then(() => {
+          actions.querySelector('.copy-trigger').textContent = 'Copied ✓';
+          setTimeout(() => actions.querySelector('.copy-trigger').textContent = 'Copy Quote', 1500);
+        });
+      });
+    }
   } else {
     bubble.innerHTML = escapeHtml(content).replace(/\n/g, '<br>');
   }
@@ -510,7 +983,7 @@ function addMessage(role, content, typing = false) {
   messagesEl.scrollTop = messagesEl.scrollHeight;
   return bubble;
 }
- 
+
 function addSystemNote(text) {
   const el = document.createElement('div');
   el.className = 'message';
@@ -521,12 +994,13 @@ function addSystemNote(text) {
   messagesEl.appendChild(el);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
- 
+
 function extractGrandTotal(text) {
   const m = text.match(/GRAND\s+TOTAL[^$]*\$\s*([\d,]+\.\d{2})/i);
   return m ? `$${m[1]}` : null;
 }
- 
+
+/* ------------------------ settings sync ------------------------ */
 async function syncSettings() {
   try {
     statusText.textContent = 'Reading sheet…';
@@ -534,7 +1008,7 @@ async function syncSettings() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const c = await res.json();
     if (c.error) throw new Error(c.error);
- 
+
     document.getElementById('v-std').textContent    = `$${(+c.std_rate).toFixed(2)}`;
     document.getElementById('v-spec').textContent   = `$${(+c.spec_rate).toFixed(2)}`;
     document.getElementById('v-diag').textContent   = `$${(+c.diag_fee).toFixed(2)}`;
@@ -542,50 +1016,69 @@ async function syncSettings() {
     document.getElementById('v-supplies').textContent = `${(+c.supplies_pct * 100).toFixed(1)}%`;
     document.getElementById('v-cap').textContent    = `$${(+c.supplies_cap).toFixed(2)}`;
     document.getElementById('v-hst').textContent    = `${(+c.hst * 100).toFixed(1)}%`;
- 
+
     statusText.textContent = 'Online · Sheet synced';
   } catch (err) {
     statusText.textContent = 'Offline · Sheet error';
     console.error('Sync error:', err);
   }
 }
- 
+
+/* ------------------------ chat ------------------------ */
 async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text) return;
- 
+
   inputEl.value = '';
   inputEl.style.height = 'auto';
   sendBtn.disabled = true;
- 
+
   addMessage('user', text);
   conversation.push({ role: 'user', content: text });
- 
+
   const bubble = addMessage('assistant', '', true);
- 
+
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: conversation }),
     });
- 
+
     if (!res.ok) {
       const errText = await res.text();
       throw new Error(`API ${res.status}: ${errText.slice(0, 200)}`);
     }
- 
+
     const data = await res.json();
     if (data.error) throw new Error(data.error);
- 
+
     const reply = (data.content || [])
       .filter(c => c.type === 'text')
       .map(c => c.text)
       .join('\n') || '(empty response)';
- 
+
     conversation.push({ role: 'assistant', content: reply });
+
+    // Replace the typing bubble with full rendered response + action buttons
     bubble.innerHTML = renderMarkdown(reply);
- 
+    if (isQuoteReply(reply)) {
+      const actions = document.createElement('div');
+      actions.className = 'quote-actions';
+      actions.innerHTML = `
+        <button class="action-btn invoice-trigger">📄 Generate Invoice</button>
+        <button class="action-btn secondary copy-trigger">Copy Quote</button>
+      `;
+      bubble.appendChild(actions);
+      actions.querySelector('.invoice-trigger').addEventListener('click', () => startInvoice(reply));
+      actions.querySelector('.copy-trigger').addEventListener('click', () => {
+        navigator.clipboard.writeText(reply).then(() => {
+          actions.querySelector('.copy-trigger').textContent = 'Copied ✓';
+          setTimeout(() => actions.querySelector('.copy-trigger').textContent = 'Copy Quote', 1500);
+        });
+      });
+    }
+
     const total = extractGrandTotal(reply);
     if (total) {
       quoteCount++;
@@ -601,14 +1094,14 @@ async function sendMessage() {
     inputEl.focus();
   }
 }
- 
+
 function logQuote(userText, reply, total) {
   const vehicle = (reply.match(/QUOTE:\s*([^\n]+)/) || [, ''])[1].trim();
   const labour  = (reply.match(/Labour subtotal[^$]*\$\s*([\d,]+\.\d{2})/) || [, ''])[1];
   const parts   = (reply.match(/Parts subtotal[^$]*\$\s*([\d,]+\.\d{2})/)  || [, ''])[1];
   const fees    = (reply.match(/Fees subtotal[^$]*\$\s*([\d,]+\.\d{2})/)   || [, ''])[1];
   const hst     = (reply.match(/HST[^$]*\$\s*([\d,]+\.\d{2})/)             || [, ''])[1];
- 
+
   fetch('/api/log-quote', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -620,7 +1113,351 @@ function logQuote(userText, reply, total) {
     }),
   }).catch(err => console.error('log-quote failed:', err));
 }
- 
+
+/* ============================================================
+   INVOICE GENERATION
+   ============================================================ */
+
+// Parse a quote markdown string into a structured object
+function parseQuote(md) {
+  const q = {
+    title: '',
+    vehicle: '',
+    category: '',
+    rush: 'No',
+    labour: [],
+    parts: [],
+    fees: [],
+    summary: {
+      labour_subtotal: 0,
+      parts_subtotal: 0,
+      fees_subtotal: 0,
+      pretax_subtotal: 0,
+      hst_rate: 0.13,
+      hst: 0,
+      grand_total: 0
+    },
+    notes: []
+  };
+
+  // Title line
+  const titleMatch = md.match(/##\s+QUOTE:\s*(.+)/i);
+  if (titleMatch) q.title = titleMatch[1].trim();
+
+  // Header info line
+  const headerMatch = md.match(/\*\*Vehicle:\*\*\s*(.+?)(?:\n|$)/);
+  if (headerMatch) {
+    const line = headerMatch[1];
+    const vm = line.match(/^([^·]+)/);
+    const cm = line.match(/Category:\*\*\s*([^·]+)/);
+    const rm = line.match(/Rush:\*\*\s*([^·\n]+)/);
+    if (vm) q.vehicle = vm[1].trim();
+    if (cm) q.category = cm[1].trim();
+    if (rm) q.rush = rm[1].trim();
+  }
+
+  // Parse sections
+  function extractTable(sectionName) {
+    const re = new RegExp(`###\\s+${sectionName}\\s*\\n([\\s\\S]*?)(?=\\n###|\\n<table|\\*\\*End of quote|$)`, 'i');
+    const m = md.match(re);
+    if (!m) return [];
+    const lines = m[1].split('\n').filter(l => l.trim().startsWith('|'));
+    if (lines.length < 2) return [];
+    return lines.slice(2) // skip header + separator
+      .map(l => l.split('|').slice(1, -1).map(c => c.trim()))
+      .filter(row => row.some(c => c !== ''));
+  }
+
+  q.labour = extractTable('LABOUR').map(row => ({
+    task: row[0] || '',
+    hours: row[1] || '',
+    rate: row[2] || '',
+    total: row[3] || ''
+  }));
+
+  q.parts = extractTable('PARTS').map(row => ({
+    part: row[0] || '',
+    tier: row[1] || '',
+    qty: row[2] || '',
+    unit: row[3] || '',
+    total: row[4] || ''
+  }));
+
+  q.fees = extractTable('FEES').map(row => ({
+    item: row[0] || '',
+    qty: row[1] || '',
+    rate: row[2] || '',
+    total: row[3] || ''
+  }));
+
+  // Summary
+  const toNum = s => {
+    if (!s) return 0;
+    const m = String(s).match(/[\d,]+\.\d{2}/);
+    return m ? parseFloat(m[0].replace(/,/g, '')) : 0;
+  };
+
+  q.summary.labour_subtotal  = toNum((md.match(/Labour subtotal[^$]*\$\s*([\d,]+\.\d{2})/) || [])[1]);
+  q.summary.parts_subtotal   = toNum((md.match(/Parts subtotal[^$]*\$\s*([\d,]+\.\d{2})/)  || [])[1]);
+  q.summary.fees_subtotal    = toNum((md.match(/Fees subtotal[^$]*\$\s*([\d,]+\.\d{2})/)   || [])[1]);
+  q.summary.pretax_subtotal  = toNum((md.match(/Pre-tax subtotal[^$]*\$\s*([\d,]+\.\d{2})/) || [])[1]);
+  q.summary.hst              = toNum((md.match(/HST[^$]*\$\s*([\d,]+\.\d{2})/) || [])[1]);
+  q.summary.grand_total      = toNum((md.match(/GRAND\s+TOTAL[^$]*\$\s*([\d,]+\.\d{2})/i) || [])[1]);
+
+  const hstPctMatch = md.match(/HST\s*\((\d+)%\)/i);
+  if (hstPctMatch) q.summary.hst_rate = parseInt(hstPctMatch[1]) / 100;
+
+  // Notes
+  const notesMatch = md.match(/###\s+NOTES\s*\n([\s\S]*?)(?=\n\*\*End of quote|$)/i);
+  if (notesMatch) {
+    q.notes = notesMatch[1].split('\n')
+      .map(l => l.replace(/^[-*]\s+/, '').trim())
+      .filter(l => l && !l.match(/^\*\*/));
+  }
+
+  return q;
+}
+
+function startInvoice(quoteText) {
+  activeQuoteText = quoteText;
+  // Pre-fill invoice number with date + random
+  const d = new Date();
+  const invNum = `INV-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${Math.floor(Math.random()*900+100)}`;
+  document.getElementById('inv-number').value = invNum;
+  // Show modal
+  document.getElementById('customer-modal').classList.add('active');
+  setTimeout(() => document.getElementById('cust-name').focus(), 100);
+}
+
+function fmt$(n) {
+  return '$' + n.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function generateInvoice() {
+  const q = parseQuote(activeQuoteText);
+
+  const customer = {
+    name:    document.getElementById('cust-name').value.trim() || '(Customer name)',
+    phone:   document.getElementById('cust-phone').value.trim(),
+    email:   document.getElementById('cust-email').value.trim(),
+    address: document.getElementById('cust-address').value.trim(),
+    plate:   document.getElementById('cust-plate').value.trim(),
+    odo:     document.getElementById('cust-odo').value.trim()
+  };
+  const invNumber = document.getElementById('inv-number').value.trim() || 'INV-0001';
+  const invDate = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+  const dueDate = new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  const shopLines = [
+    shopInfo.address,
+    [shopInfo.city, shopInfo.postal].filter(Boolean).join('  '),
+    shopInfo.phone,
+    shopInfo.email,
+    shopInfo.hst ? `HST #: ${shopInfo.hst}` : ''
+  ].filter(Boolean);
+
+  const custLines = [
+    customer.address,
+    [customer.phone, customer.email].filter(Boolean).join(' · ')
+  ].filter(Boolean);
+
+  const html = `
+    <div class="inv-header">
+      <div class="inv-brand">
+        <div class="inv-brand-mark">B1</div>
+        <div>
+          <h1>${escapeHtml(shopInfo.name)}</h1>
+          <div class="shop-info">
+            ${shopLines.map(l => escapeHtml(l)).join('<br>')}
+          </div>
+        </div>
+      </div>
+      <div class="inv-title">
+        <h2>Invoice</h2>
+        <div class="meta">
+          <strong>${escapeHtml(invNumber)}</strong><br>
+          Date: ${escapeHtml(invDate)}<br>
+          Due: ${escapeHtml(dueDate)}
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-parties">
+      <div class="inv-party">
+        <h3>Bill To</h3>
+        <div class="party-name">${escapeHtml(customer.name)}</div>
+        ${custLines.map(l => `<div class="party-line">${escapeHtml(l)}</div>`).join('')}
+      </div>
+      <div class="inv-party">
+        <h3>Vehicle</h3>
+        <div class="party-name">${escapeHtml(q.vehicle || q.title)}</div>
+        ${q.category ? `<div class="party-line">Category: ${escapeHtml(q.category)}</div>` : ''}
+        ${customer.plate ? `<div class="party-line">Plate: ${escapeHtml(customer.plate)}</div>` : ''}
+        ${customer.odo ? `<div class="party-line">Odometer: ${escapeHtml(customer.odo)} km</div>` : ''}
+      </div>
+    </div>
+
+    ${q.labour.length ? `
+    <div class="inv-section-title">Labour</div>
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th style="width:60%;">Description</th>
+          <th class="num" style="width:10%;">Hrs</th>
+          <th class="num" style="width:15%;">Rate</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${q.labour.map(r => `
+          <tr>
+            <td>${escapeHtml(r.task)}</td>
+            <td class="num">${escapeHtml(r.hours)}</td>
+            <td class="num">${escapeHtml(r.rate)}</td>
+            <td class="num">${escapeHtml(r.total)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    ` : ''}
+
+    ${q.parts.length ? `
+    <div class="inv-section-title">Parts</div>
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th style="width:50%;">Part</th>
+          <th style="width:15%;">Tier</th>
+          <th class="num" style="width:8%;">Qty</th>
+          <th class="num" style="width:12%;">Unit</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${q.parts.map(r => `
+          <tr>
+            <td>${escapeHtml(r.part)}</td>
+            <td>${escapeHtml(r.tier)}</td>
+            <td class="num">${escapeHtml(r.qty)}</td>
+            <td class="num">${escapeHtml(r.unit)}</td>
+            <td class="num">${escapeHtml(r.total)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    ` : ''}
+
+    ${q.fees.length ? `
+    <div class="inv-section-title">Shop Fees & Environmental</div>
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th style="width:65%;">Item</th>
+          <th class="num" style="width:10%;">Qty</th>
+          <th class="num" style="width:12%;">Rate</th>
+          <th class="num" style="width:13%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${q.fees.map(r => `
+          <tr>
+            <td>${escapeHtml(r.item)}</td>
+            <td class="num">${escapeHtml(r.qty)}</td>
+            <td class="num">${escapeHtml(r.rate)}</td>
+            <td class="num">${escapeHtml(r.total)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    ` : ''}
+
+    <div class="inv-totals">
+      <div class="total-row">
+        <span>Labour Subtotal</span>
+        <span class="num">${fmt$(q.summary.labour_subtotal)}</span>
+      </div>
+      <div class="total-row">
+        <span>Parts Subtotal</span>
+        <span class="num">${fmt$(q.summary.parts_subtotal)}</span>
+      </div>
+      <div class="total-row">
+        <span>Fees Subtotal</span>
+        <span class="num">${fmt$(q.summary.fees_subtotal)}</span>
+      </div>
+      <div class="total-row">
+        <span>Subtotal (pre-tax)</span>
+        <span class="num">${fmt$(q.summary.pretax_subtotal)}</span>
+      </div>
+      <div class="total-row">
+        <span>HST (${(q.summary.hst_rate * 100).toFixed(0)}%)</span>
+        <span class="num">${fmt$(q.summary.hst)}</span>
+      </div>
+      <div class="total-row grand">
+        <span>Total Due (CAD)</span>
+        <span class="num">${fmt$(q.summary.grand_total)}</span>
+      </div>
+    </div>
+
+    ${q.notes.length ? `
+    <div class="inv-notes">
+      <h3>Notes</h3>
+      <ul>
+        ${q.notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}
+      </ul>
+    </div>
+    ` : ''}
+
+    <div class="inv-notes">
+      <h3>Terms & Warranty</h3>
+      <ul>
+        <li>Payment due within 30 days of invoice date. Late payments subject to 2% monthly interest.</li>
+        <li>Labour warranty: 12 months or 20,000 km, whichever comes first.</li>
+        <li>Parts warranty varies by manufacturer: OEM parts 24 months, aftermarket parts 12 months.</li>
+        <li>Under the Ontario Consumer Protection Act, the final invoice will not exceed the quoted estimate by more than 10% without written re-authorization.</li>
+        <li>Core charges are refunded when the old part is returned in rebuildable condition.</li>
+      </ul>
+    </div>
+
+    <div class="inv-signature">
+      <div class="sig-block">Customer Signature / Date</div>
+      <div class="sig-block">Authorized Shop Signature / Date</div>
+    </div>
+  `;
+
+  document.getElementById('invoice-paper').innerHTML = html;
+  document.getElementById('invoice-meta').textContent = `${invNumber}  ·  ${customer.name}`;
+  document.getElementById('customer-modal').classList.remove('active');
+  document.getElementById('invoice-view').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ------------------------ shop info modal ------------------------ */
+function openShopInfoModal() {
+  document.getElementById('shop-name').value    = shopInfo.name;
+  document.getElementById('shop-address').value = shopInfo.address;
+  document.getElementById('shop-city').value    = shopInfo.city;
+  document.getElementById('shop-postal').value  = shopInfo.postal;
+  document.getElementById('shop-phone').value   = shopInfo.phone;
+  document.getElementById('shop-email').value   = shopInfo.email;
+  document.getElementById('shop-hst').value     = shopInfo.hst;
+  document.getElementById('shop-info-modal').classList.add('active');
+}
+
+function saveShopInfo() {
+  shopInfo = {
+    name:    document.getElementById('shop-name').value.trim() || 'Bay 1 Auto Repair',
+    address: document.getElementById('shop-address').value.trim(),
+    city:    document.getElementById('shop-city').value.trim(),
+    postal:  document.getElementById('shop-postal').value.trim(),
+    phone:   document.getElementById('shop-phone').value.trim(),
+    email:   document.getElementById('shop-email').value.trim(),
+    hst:     document.getElementById('shop-hst').value.trim()
+  };
+  document.getElementById('shop-info-modal').classList.remove('active');
+  addSystemNote('Shop info updated for future invoices.');
+}
+
+/* ------------------------ interactions ------------------------ */
 sendBtn.addEventListener('click', sendMessage);
 syncBtn.addEventListener('click', () => {
   syncSettings();
@@ -650,25 +1487,51 @@ clearBtn.addEventListener('click', () => {
   lastTotalEl.textContent = '—';
   showWelcome();
 });
- 
+
+// Shop info modal
+document.getElementById('shop-info-btn').addEventListener('click', openShopInfoModal);
+document.getElementById('shop-info-close').addEventListener('click', () => document.getElementById('shop-info-modal').classList.remove('active'));
+document.getElementById('shop-info-cancel').addEventListener('click', () => document.getElementById('shop-info-modal').classList.remove('active'));
+document.getElementById('shop-info-save').addEventListener('click', saveShopInfo);
+
+// Customer modal
+document.getElementById('customer-close').addEventListener('click', () => document.getElementById('customer-modal').classList.remove('active'));
+document.getElementById('customer-cancel').addEventListener('click', () => document.getElementById('customer-modal').classList.remove('active'));
+document.getElementById('customer-generate').addEventListener('click', generateInvoice);
+
+// Invoice view controls
+document.getElementById('invoice-back').addEventListener('click', () => {
+  document.getElementById('invoice-view').classList.remove('active');
+});
+document.getElementById('invoice-print').addEventListener('click', () => window.print());
+
+// Close modals on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => {
+    if (e.target === m) m.classList.remove('active');
+  });
+});
+
 function showWelcome() {
   addSystemNote('Bay 1 initialized · Ontario · Reading live Google Sheet on every quote');
   addMessage('assistant',
 `## Ready to quote.
- 
-Describe any repair and I'll return a full itemized estimate — **labour, parts, fees, and HST** — using your **live Google Sheet** data. Edit the sheet and the next quote reflects it instantly.
- 
+
+Describe any repair and I'll return a full itemized estimate — **labour, parts, fees, and HST** — using your **live Google Sheet** data.
+
+After each quote, click **📄 Generate Invoice** below the response to turn it into a printable customer invoice.
+
 **Include in your message:**
 - Year, make, model, engine
-- The job (as specific as you can — "front brake pads + rotors" beats "brakes")
+- The job (as specific as you can)
 - Parts preference: **OEM**, **Aftermarket**, or **Reman** (default: Aftermarket)
 - Flags: rust-belt, rush job, European luxury, EV/hybrid
- 
-Or click a **Quick Job** on the left to auto-fill a common request.
- 
+
+Or click a **Quick Job** on the left.
+
 **End of setup.**`);
 }
- 
+
 syncSettings();
 showWelcome();
 inputEl.focus();
