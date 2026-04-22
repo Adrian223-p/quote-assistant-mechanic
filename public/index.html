@@ -642,7 +642,10 @@
       <div class="brand-text">Bay 1</div>
       <div class="brand-sub">Owner Quote Console · Ontario · Live Sheet</div>
     </div>
-    <div class="status">
+    <button id="topbar-invoice-btn" style="margin-left:auto; background:var(--amber); color:var(--bg); border:none; padding:8px 16px; font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border-radius:2px; display:none;">
+      📄 Invoice Last Quote
+    </button>
+    <div class="status" style="margin-left:16px;">
       <div class="status-dot"></div>
       <span id="status-text">Connecting…</span>
     </div>
@@ -879,6 +882,7 @@ const statusText   = document.getElementById('status-text');
 let quoteCount = 0;
 const conversation = [];
 let activeQuoteText = null; // holds the quote being converted to invoice
+let lastQuoteText = null;   // always holds the most recent quote for the topbar button
 
 // Persistent shop info - stored in memory only (no localStorage per artifact rules)
 let shopInfo = {
@@ -940,7 +944,14 @@ function renderMarkdown(md) {
 }
 
 function isQuoteReply(text) {
-  return /##\s+QUOTE:/i.test(text) && /GRAND\s+TOTAL/i.test(text);
+  if (!text) return false;
+  // Loose detection: any of these signals counts as a quote
+  const hasGrandTotal = /grand\s*total/i.test(text);
+  const hasDollarTotal = /\$\s*[\d,]+\.\d{2}/.test(text);
+  const hasQuoteHeader = /quote:/i.test(text);
+  const hasLabourOrParts = /(labour|labor|parts)\s*(subtotal|total)/i.test(text);
+  // Show the invoice button if we see a grand total, OR (quote header + dollars), OR labour/parts totals
+  return hasGrandTotal || (hasQuoteHeader && hasDollarTotal) || hasLabourOrParts;
 }
 
 function addMessage(role, content, typing = false) {
@@ -1085,6 +1096,13 @@ async function sendMessage() {
       quoteCountEl.textContent = quoteCount;
       lastTotalEl.textContent = total;
       logQuote(text, reply, total);
+    }
+
+    // Always remember the latest assistant reply that looks like a quote
+    // so the topbar "Invoice Last Quote" button has something to use
+    if (isQuoteReply(reply)) {
+      lastQuoteText = reply;
+      document.getElementById('topbar-invoice-btn').style.display = 'inline-flex';
     }
   } catch (err) {
     bubble.innerHTML = `<span style="color: var(--red);">Error: ${escapeHtml(err.message)}</span>`;
@@ -1485,6 +1503,8 @@ clearBtn.addEventListener('click', () => {
   quoteCount = 0;
   quoteCountEl.textContent = 0;
   lastTotalEl.textContent = '—';
+  lastQuoteText = null;
+  document.getElementById('topbar-invoice-btn').style.display = 'none';
   showWelcome();
 });
 
@@ -1493,6 +1513,15 @@ document.getElementById('shop-info-btn').addEventListener('click', openShopInfoM
 document.getElementById('shop-info-close').addEventListener('click', () => document.getElementById('shop-info-modal').classList.remove('active'));
 document.getElementById('shop-info-cancel').addEventListener('click', () => document.getElementById('shop-info-modal').classList.remove('active'));
 document.getElementById('shop-info-save').addEventListener('click', saveShopInfo);
+
+// Topbar "Invoice Last Quote" button - fallback for when inline button doesn't show
+document.getElementById('topbar-invoice-btn').addEventListener('click', () => {
+  if (lastQuoteText) {
+    startInvoice(lastQuoteText);
+  } else {
+    alert('No quote yet. Ask the bot for a quote first.');
+  }
+});
 
 // Customer modal
 document.getElementById('customer-close').addEventListener('click', () => document.getElementById('customer-modal').classList.remove('active'));
