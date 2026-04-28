@@ -177,6 +177,20 @@
     background: var(--bg-elev); padding: 2px 6px; border-radius: 2px; color: var(--amber);
   }
   .msg-bubble hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
+  .msg-bubble blockquote {
+    margin: 12px 0;
+    padding: 14px 18px;
+    background: rgba(244, 168, 37, 0.06);
+    border-left: 3px solid var(--amber);
+    border-radius: 2px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .msg-bubble blockquote p { margin: 8px 0; }
+  .msg-bubble blockquote p:first-child { margin-top: 0; }
+  .msg-bubble blockquote p:last-child { margin-bottom: 0; }
+  .msg-bubble blockquote strong { color: var(--amber); }
 
   /* Invoice button that appears under every quote */
   .quote-actions {
@@ -1110,6 +1124,15 @@ function renderMarkdown(md) {
   html = html.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
   html = html.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
   html = html.replace(/^---+\s*$/gm, '<hr>');
+
+  // Blockquotes: consecutive lines starting with "> " become a single <blockquote>
+  html = html.replace(/((?:^>\s?.*\n?)+)/gm, (block) => {
+    const inner = block.split('\n')
+      .map(l => l.replace(/^>\s?/, ''))
+      .join('\n')
+      .trim();
+    return '<blockquote>' + inner + '</blockquote>\n';
+  });
 
   html = html.replace(/((?:^\|.*\|\s*\n)+)/gm, (block) => {
     const lines = block.trim().split('\n');
