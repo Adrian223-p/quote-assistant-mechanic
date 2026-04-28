@@ -590,6 +590,216 @@
     overflow-y: auto;
   }
   .invoice-view.active { display: block; }
+
+  /* Past Quotes view */
+  .history-view {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    color: var(--text);
+    z-index: 2000;
+    overflow-y: auto;
+  }
+  .history-view.active { display: flex; flex-direction: column; }
+  .history-toolbar {
+    position: sticky; top: 0;
+    background: var(--bg-panel);
+    padding: 14px 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    z-index: 10;
+  }
+  .history-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    flex-shrink: 0;
+  }
+  .history-toolbar input#history-search {
+    flex: 1;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 8px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    border-radius: 2px;
+    outline: none;
+    max-width: 360px;
+  }
+  .history-toolbar input#history-search:focus { border-color: var(--amber); }
+  .history-toolbar button {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--text-dim);
+    padding: 8px 14px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .history-toolbar button:hover { color: var(--text); border-color: var(--text-dim); }
+  .history-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px 64px;
+  }
+  .history-stats {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .history-stats .stat-num { color: var(--amber); font-weight: 600; }
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .history-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--amber);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .history-card:hover { border-color: var(--line-strong); border-left-color: var(--amber); }
+  .history-card-header {
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .history-card-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .history-card-vehicle {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-card-job {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-card-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+  .history-card-totals {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .history-card-total {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--amber);
+    line-height: 1;
+  }
+  .history-card-total-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-faint);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .history-card-detail {
+    display: none;
+    padding: 18px;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  .history-card.expanded .history-card-detail { display: block; }
+  .history-card-actions {
+    padding: 12px 18px;
+    border-top: 1px solid var(--line);
+    display: none;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: var(--bg-elev);
+  }
+  .history-card.expanded .history-card-actions { display: flex; }
+  .history-card-actions button {
+    background: transparent;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    padding: 6px 12px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .history-card-actions button:hover { background: var(--amber); color: var(--bg); }
+  .history-card-actions button.danger {
+    border-color: var(--line-strong);
+    color: var(--text-dim);
+  }
+  .history-card-actions button.danger:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: transparent;
+  }
+  .history-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .history-empty .icon { font-size: 48px; opacity: 0.3; display: block; margin-bottom: 16px; }
+  @media (max-width: 700px) {
+    .history-toolbar { flex-wrap: wrap; padding: 10px 14px; }
+    .history-toolbar input#history-search { max-width: 100%; order: 99; }
+    .history-body { padding: 14px; }
+    .history-card-header { grid-template-columns: 1fr; }
+    .history-card-totals { text-align: left; align-items: flex-start; }
+  }
   .invoice-toolbar {
     position: sticky; top: 0;
     background: #1f2124;
@@ -801,7 +1011,7 @@
   /* Print styles */
   @media print {
     body { background: #fff; overflow: visible; }
-    .app, .modal-overlay { display: none !important; }
+    .app, .modal-overlay, .history-view { display: none !important; }
     .invoice-view { position: static; background: #fff; overflow: visible; }
     .invoice-toolbar { display: none; }
     .invoice-paper {
@@ -859,7 +1069,10 @@
       <div class="brand-text">Bay 1</div>
       <div class="brand-sub">Owner Quote Console · Ontario · Live Sheet</div>
     </div>
-    <button id="topbar-invoice-btn" style="margin-left:auto; background:var(--amber); color:var(--bg); border:none; padding:8px 16px; font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border-radius:2px; display:none;">
+    <button id="topbar-history-btn" style="margin-left:auto; background:transparent; color:var(--amber); border:1px solid var(--amber); padding:8px 16px; font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border-radius:2px;">
+      📋 Past Quotes
+    </button>
+    <button id="topbar-invoice-btn" style="margin-left:8px; background:var(--amber); color:var(--bg); border:none; padding:8px 16px; font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; border-radius:2px; display:none;">
       📄 Invoice Last Quote
     </button>
     <div class="status" style="margin-left:16px;">
@@ -1084,6 +1297,20 @@
     <button id="invoice-print">🖨 Print / Save PDF</button>
   </div>
   <div class="invoice-paper" id="invoice-paper"></div>
+</div>
+
+<!-- Past Quotes panel (full-screen overlay) -->
+<div class="history-view" id="history-view">
+  <div class="history-toolbar">
+    <div class="history-title">📋 Past Quotes</div>
+    <input type="text" id="history-search" placeholder="Search by vehicle, job, or date…" />
+    <button class="secondary" id="history-refresh">↻ Refresh</button>
+    <button class="secondary" id="history-back">← Back to Chat</button>
+  </div>
+  <div class="history-body">
+    <div class="history-stats" id="history-stats">Loading…</div>
+    <div class="history-list" id="history-list"></div>
+  </div>
 </div>
 
 <script>
@@ -1361,6 +1588,7 @@ function logQuote(userText, reply, total) {
       vehicle, job: userText.slice(0, 200),
       labour, parts, fees, hst,
       total: total.replace('$', ''),
+      full_quote: reply.slice(0, 8000),  // store the full quote text for re-display
     }),
   }).catch(err => console.error('log-quote failed:', err));
 }
@@ -2471,6 +2699,185 @@ Or click a **Quick Job** on the left.
 
 **End of setup.**`);
 }
+
+/* ============================================================
+   PAST QUOTES (history view)
+   ============================================================ */
+
+let pastQuotesCache = [];
+
+function fmtTimestamp(iso) {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    const date = d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+    const time = d.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' });
+    return `${date} · ${time}`;
+  } catch { return iso; }
+}
+
+async function loadPastQuotes() {
+  const statsEl = document.getElementById('history-stats');
+  const listEl = document.getElementById('history-list');
+  statsEl.textContent = 'Loading…';
+  listEl.innerHTML = '';
+
+  try {
+    const res = await fetch('/api/past-quotes');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    pastQuotesCache = data.quotes || [];
+    renderPastQuotes(pastQuotesCache);
+  } catch (err) {
+    statsEl.innerHTML = `<span style="color: var(--red);">Error loading quotes: ${escapeHtml(err.message)}</span>`;
+    console.error('past-quotes error:', err);
+  }
+}
+
+function renderPastQuotes(quotes) {
+  const statsEl = document.getElementById('history-stats');
+  const listEl = document.getElementById('history-list');
+
+  if (!quotes.length) {
+    statsEl.textContent = 'No quotes yet.';
+    listEl.innerHTML = `
+      <div class="history-empty">
+        <span class="icon">📋</span>
+        No past quotes to display.<br>
+        Generate a quote in the chat and it will appear here automatically.
+      </div>
+    `;
+    return;
+  }
+
+  // Compute total revenue from displayed quotes
+  let totalRevenue = 0;
+  for (const q of quotes) {
+    const t = parseFloat(String(q.total).replace(/[^0-9.]/g, ''));
+    if (!isNaN(t)) totalRevenue += t;
+  }
+
+  statsEl.innerHTML = `
+    <span class="stat-num">${quotes.length}</span> quote${quotes.length !== 1 ? 's' : ''} ·
+    Total value: <span class="stat-num">$${totalRevenue.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> CAD
+  `;
+
+  listEl.innerHTML = '';
+  quotes.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    card.dataset.idx = idx;
+
+    const totalDisplay = q.total ? '$' + Number(String(q.total).replace(/[^0-9.]/g, '')).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
+
+    card.innerHTML = `
+      <div class="history-card-header">
+        <div class="history-card-main">
+          <div class="history-card-vehicle">${escapeHtml(q.vehicle || 'Unknown vehicle')}</div>
+          <div class="history-card-job">${escapeHtml(q.job || 'No job description')}</div>
+          <div class="history-card-meta">${escapeHtml(fmtTimestamp(q.timestamp))}</div>
+        </div>
+        <div class="history-card-totals">
+          <div class="history-card-total">${totalDisplay}</div>
+          <div class="history-card-total-label">Total CAD</div>
+        </div>
+      </div>
+      <div class="history-card-detail"></div>
+      <div class="history-card-actions">
+        <button class="action-reuse">↩ Reuse in Chat</button>
+        <button class="action-invoice">📄 Generate Invoice</button>
+        <button class="action-copy">Copy as Text</button>
+      </div>
+    `;
+
+    // Toggle expand
+    card.querySelector('.history-card-header').addEventListener('click', () => {
+      const isExpanded = card.classList.contains('expanded');
+      // Close all others
+      document.querySelectorAll('.history-card.expanded').forEach(c => c.classList.remove('expanded'));
+      if (!isExpanded) {
+        card.classList.add('expanded');
+        const detailEl = card.querySelector('.history-card-detail');
+        if (q.full_quote) {
+          detailEl.textContent = q.full_quote;
+        } else {
+          detailEl.innerHTML = `<em style="color: var(--text-faint);">No full quote text saved (this quote was created before history was enabled).</em>`;
+        }
+      }
+    });
+
+    // Reuse: load this quote back into the chat as if it was a fresh assistant message
+    card.querySelector('.action-reuse').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!q.full_quote) {
+        alert('Full quote text not saved for this entry.');
+        return;
+      }
+      document.getElementById('history-view').classList.remove('active');
+      addMessage('assistant', q.full_quote);
+      // Make it the lastQuoteText so the topbar invoice button works
+      lastQuoteText = q.full_quote;
+      document.getElementById('topbar-invoice-btn').style.display = 'inline-flex';
+    });
+
+    // Invoice: open the invoice modal directly with this quote
+    card.querySelector('.action-invoice').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!q.full_quote) {
+        alert('Cannot generate invoice — full quote text not saved.');
+        return;
+      }
+      document.getElementById('history-view').classList.remove('active');
+      startInvoice(q.full_quote);
+    });
+
+    // Copy: copy the full quote text to clipboard
+    card.querySelector('.action-copy').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const text = q.full_quote || `${q.vehicle}\n${q.job}\nTotal: $${q.total}`;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = e.target;
+        const orig = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        setTimeout(() => { btn.textContent = orig; }, 1500);
+      });
+    });
+
+    listEl.appendChild(card);
+  });
+}
+
+function filterPastQuotes(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) {
+    renderPastQuotes(pastQuotesCache);
+    return;
+  }
+  const filtered = pastQuotesCache.filter(quote => {
+    const haystack = [
+      quote.vehicle, quote.job, quote.timestamp, quote.total
+    ].join(' ').toLowerCase();
+    return haystack.includes(q);
+  });
+  renderPastQuotes(filtered);
+}
+
+// Wire up Past Quotes UI
+document.getElementById('topbar-history-btn').addEventListener('click', () => {
+  document.getElementById('history-view').classList.add('active');
+  document.getElementById('history-search').value = '';
+  loadPastQuotes();
+});
+document.getElementById('history-back').addEventListener('click', () => {
+  document.getElementById('history-view').classList.remove('active');
+});
+document.getElementById('history-refresh').addEventListener('click', loadPastQuotes);
+document.getElementById('history-search').addEventListener('input', (e) => {
+  filterPastQuotes(e.target.value);
+});
 
 syncSettings();
 showWelcome();
