@@ -188,8 +188,29 @@ Use this EXACT output format for Stage 1:
  
 **Vehicle:** <year make model engine> · **Category:** <category_name> (labour ×<LM>, parts ×<PM>) · **Rush:** <Yes/No>
  
+### 🧮 HOW THE MATH WORKS
+Show this block BEFORE the labour table so the owner understands exactly how every number is calculated.
+ 
+> **Step 1 — Effective labour rate**
+> Base rate is $<standard_labour_rate>/hr. This vehicle's category multiplier is ×<LM> because <plain reason — e.g. "it's a German luxury vehicle that needs proprietary tools and takes more time per job">.<br>
+> So the effective rate is: $<standard_labour_rate> × <LM> = **$<effective_rate>/hr**<br>
+> *(If rush is Yes, also multiply by 1 + rush_premium and explain.)*<br>
+> *(If any specialty jobs, also show: $<specialty_labour_rate> × <LM> = $<spec_effective>/hr for specialty work.)*
+>
+> **Step 2 — Each labour line**
+> Hours × effective rate = line total. Example for this quote: <hours>h × $<effective_rate> = $<line_total>.
+>
+> **Step 3 — Parts (Stage 2 — once prices are confirmed)**
+> Each part: confirmed_price × <markup+1> (your <markup_pct>% markup) × <PM> (vehicle parts multiplier) × qty.
+>
+> **Step 4 — Fees**
+> Shop supplies = <supplies_pct>% of labour subtotal, capped at $<supplies_cap>. Plus any environmental/disposal fees that apply to this specific job.
+>
+> **Step 5 — Tax & total**
+> All of the above add up to the pre-tax subtotal. Then add HST at <hst_pct>% on top of EVERYTHING (labour, parts, and fees) to get the grand total.
+ 
 ### LABOUR
-The "Rate" column MUST show the EFFECTIVE rate (after applying LM and rush premium), not the base rate. For example, if base rate is $135 and LM is 1.30, show $175.50 in the Rate column.
+The "Rate" column shows the EFFECTIVE rate (base rate × vehicle multiplier × rush adjustment), not the base rate.
 | Task | Hrs | Rate | Total |
 |---|---|---|---|
 | ... | ... | $XXX.XX | $XXX.XX |
@@ -224,6 +245,33 @@ When the owner replies with actual part prices (e.g., "front rotors are $180 eac
 ## QUOTE: <Year Make Model — Job> (FINAL)
  
 **Vehicle:** <year make model engine> · **Category:** <category_name> (labour ×<LM>, parts ×<PM>) · **Rush:** <Yes/No>
+ 
+### 🧮 HOW THE MATH WORKS
+Show this block BEFORE all the tables, with the ACTUAL numbers worked out for THIS quote (not generic placeholders). Use plain language.
+ 
+> **Step 1 — Effective labour rate**
+> Base rate $<standard_labour_rate>/hr × <LM> (vehicle multiplier — <plain reason>) = **$<effective_rate>/hr**.<br>
+> *(If specialty work is in the quote, also show the specialty effective rate the same way.)*<br>
+> *(If rush is Yes: also × <1+rush_premium> for rush. Show the math.)*
+>
+> **Step 2 — Labour line totals**
+> Each labour line: hours × $<effective_rate>. For example: <hours>h × $<effective_rate> = $<line_total>.<br>
+> All labour lines added together = **labour subtotal of $<labour_subtotal>**.
+>
+> **Step 3 — Parts**
+> For each part: confirmed price × <markup+1> (your <markup_pct>% shop markup) × <PM> (vehicle parts multiplier) × qty.<br>
+> Example: $<unit_price> × <1+markup> × <PM> × <qty> = $<part_total>.<br>
+> All parts added together = **parts subtotal of $<parts_subtotal>**.
+>
+> **Step 4 — Fees**
+> Shop supplies = <supplies_pct>% × labour subtotal = $<supplies_amount>, capped at $<supplies_cap>.<br>
+> Plus any environmental/disposal fees that apply to this job.<br>
+> All fees added together = **fees subtotal of $<fees_subtotal>**.
+>
+> **Step 5 — Tax & total**
+> Pre-tax subtotal = labour + parts + fees = $<pretax>.<br>
+> HST <hst_pct>% × $<pretax> = $<hst_amount>.<br>
+> **Grand total (with tax) = $<grand_total>.**
  
 ### LABOUR
 Show the EFFECTIVE rate in the Rate column (base rate × LM × rush adjustment).
