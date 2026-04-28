@@ -256,6 +256,37 @@
     padding: 8px 0 12px;
     line-height: 1.5;
   }
+  .parts-panel-instruction {
+    background: rgba(244, 168, 37, 0.08);
+    border-left: 3px solid var(--amber);
+    color: var(--text);
+    padding: 10px 12px;
+    margin: 8px 0 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 2px;
+  }
+  .parts-section-header {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    border-radius: 2px;
+  }
+  .parts-section-header.oem {
+    color: var(--amber);
+    background: rgba(244, 168, 37, 0.1);
+    border-left: 3px solid var(--amber);
+  }
+  .parts-section-header.aftermarket {
+    color: var(--green);
+    background: rgba(127, 176, 105, 0.1);
+    border-left: 3px solid var(--green);
+  }
   .parts-panel-section {
     margin-bottom: 18px;
   }
@@ -1117,13 +1148,16 @@ function renderMarkdown(md) {
 
 function isQuoteReply(text) {
   if (!text) return false;
-  // Loose detection: any of these signals counts as a quote
+  // Detect quote-like responses to show the action buttons.
+  // Triggers on:
+  //  - Full quote with totals (grand total or labour/parts subtotals)
+  //  - Quote header (## QUOTE: ...) even without numbers
+  //  - Parts identification list (## PARTS NEEDED: ...) — the new pre-quote workflow
   const hasGrandTotal = /grand\s*total/i.test(text);
-  const hasDollarTotal = /\$\s*[\d,]+\.\d{2}/.test(text);
-  const hasQuoteHeader = /quote:/i.test(text);
-  const hasLabourOrParts = /(labour|labor|parts)\s*(subtotal|total)/i.test(text);
-  // Show the invoice button if we see a grand total, OR (quote header + dollars), OR labour/parts totals
-  return hasGrandTotal || (hasQuoteHeader && hasDollarTotal) || hasLabourOrParts;
+  const hasQuoteHeader = /##\s*QUOTE:/i.test(text);
+  const hasPartsHeader = /##\s*PARTS\s*NEEDED:/i.test(text);
+  const hasLabourOrPartsTotal = /(labour|labor|parts)\s*(subtotal|total)/i.test(text);
+  return hasGrandTotal || hasQuoteHeader || hasPartsHeader || hasLabourOrPartsTotal;
 }
 
 function addMessage(role, content, typing = false) {
@@ -1737,23 +1771,24 @@ const BRAND_OEM = [
 ];
 
 // Universal aftermarket sources (work for any vehicle).
-// We use *verified* search URL formats. Where the format is unreliable,
-// we use Google Site-Search instead to guarantee results.
+// Uses each retailer's NATIVE search URL with a simple part-name query.
+// Simple queries (just the part name) work because retailers handle vehicle
+// filtering via their own VIN/year-picker on the page.
 const UNIVERSAL_AFTERMARKET = [
   { name: 'PartSource', logo: '🇨🇦', region: 'Aftermarket · Canada',
-    url: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + ' site:partsource.ca')}`,
+    url: (q) => `https://partsource.ca/search?q=${encodeURIComponent(q)}`,
     notes: 'Canadian aftermarket, in-store pickup' },
   { name: 'Canadian Tire Auto', logo: '🇨🇦', region: 'Aftermarket · Canada',
     url: (q) => `https://www.canadiantire.ca/en/search-results.html?q=${encodeURIComponent(q)}`,
     notes: 'Wide aftermarket selection in Canada' },
   { name: 'NAPA Canada', logo: '🇨🇦', region: 'Aftermarket · Trade',
-    url: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + ' site:napacanada.com')}`,
+    url: (q) => `https://www.napacanada.com/en/search?text=${encodeURIComponent(q)}`,
     notes: 'Trade pricing if you have a NAPA account' },
   { name: 'PartsAvatar', logo: '🇨🇦', region: 'Aftermarket · Canada',
-    url: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + ' site:partsavatar.ca')}`,
+    url: (q) => `https://www.partsavatar.ca/search?q=${encodeURIComponent(q)}`,
     notes: 'Free Canadian shipping, OEM + aftermarket' },
   { name: 'RockAuto', logo: '🌐', region: 'Aftermarket · Best prices',
-    url: (q) => `https://www.google.com/search?q=${encodeURIComponent(q + ' site:rockauto.com')}`,
+    url: (q) => `https://www.rockauto.com/en/partsearch/?partsearch=${encodeURIComponent(q)}`,
     notes: 'Often cheapest, ships from US' },
   { name: 'Amazon.ca Auto', logo: '📦', region: 'Aftermarket · Fast shipping',
     url: (q) => `https://www.amazon.ca/s?k=${encodeURIComponent(q)}&i=automotive`,
@@ -1777,7 +1812,8 @@ function findOemSources(make) {
 function extractVehicleAndParts(quoteText) {
   const result = { vehicle: '', make: '', parts: [], tier: null };
 
-  const titleMatch = quoteText.match(/##\s+QUOTE:\s*(.+)/i);
+  // Try several header patterns
+  const titleMatch = quoteText.match(/##\s+(?:QUOTE|PARTS\s*NEEDED):\s*(.+)/i);
   if (titleMatch) {
     const title = titleMatch[1].split(/—|–|-/)[0].trim();
     result.vehicle = title;
@@ -1793,9 +1829,9 @@ function extractVehicleAndParts(quoteText) {
   // Try to detect parts tier from quote text
   if (/\bOEM\b/i.test(quoteText)) result.tier = 'oem';
   else if (/\baftermarket\b|\bAFM\b/i.test(quoteText)) result.tier = 'aftermarket';
-  else if (/\breman/i.test(quoteText)) result.tier = 'aftermarket'; // reman is treated as aftermarket-style
+  else if (/\breman/i.test(quoteText)) result.tier = 'aftermarket';
 
-  // Extract part names from PARTS table
+  // Extract part names from PARTS table (full quote)
   const partsTableMatch = quoteText.match(/###\s+PARTS\s*\n([\s\S]*?)(?=\n###|\*\*End of quote|$)/i);
   if (partsTableMatch) {
     const rows = partsTableMatch[1].split('\n')
@@ -1805,6 +1841,28 @@ function extractVehicleAndParts(quoteText) {
       const cells = row.split('|').slice(1, -1).map(c => c.trim());
       if (cells[0] && cells[0] !== '...') {
         result.parts.push({ name: cells[0], tier: cells[1] || '' });
+      }
+    }
+  }
+
+  // Extract part names from PARTS NEEDED bullet list (pre-quote workflow)
+  // Format: "## PARTS NEEDED:" followed by bullet points like "- Front brake pads"
+  if (result.parts.length === 0) {
+    const needMatch = quoteText.match(/##\s*PARTS\s*NEEDED[\s\S]*?(?=##|\*\*End|$)/i);
+    if (needMatch) {
+      const lines = needMatch[0].split('\n');
+      for (const line of lines) {
+        const m = line.match(/^[\s]*[-*•]\s+(.+?)\s*(?:\(.*\))?\s*$/);
+        if (m) {
+          let name = m[1].trim();
+          // Strip leading "Front", "Rear" etc only if it's a quantity prefix; keep otherwise
+          name = name.replace(/^[\d]+x?\s+/, ''); // strip "2x ", "1 "
+          // Strip trailing notes after a colon or em-dash
+          name = name.split(/[:—–]/)[0].trim();
+          if (name && name.length < 80) {
+            result.parts.push({ name, tier: '' });
+          }
+        }
       }
     }
   }
@@ -1825,36 +1883,8 @@ function showPartsLinks(quoteText, parentBubble) {
   panel = document.createElement('div');
   panel.className = 'parts-panel';
 
-  // STEP 1: If tier wasn't specified, ask the user
-  if (!info.tier) {
-    panel.innerHTML = `
-      <div class="parts-panel-header">
-        <strong>🔧 Find these parts online</strong>
-        <span class="parts-panel-vehicle">${escapeHtml(info.vehicle || 'vehicle')}</span>
-      </div>
-      <div class="parts-tier-prompt">
-        <div class="prompt-text">Which type of parts do you want links for?</div>
-        <div class="prompt-buttons">
-          <button class="tier-btn" data-tier="oem">⭐ OEM<span>Genuine factory parts</span></button>
-          <button class="tier-btn" data-tier="aftermarket">💲 Aftermarket<span>Cheaper, varied quality</span></button>
-          <button class="tier-btn" data-tier="both">🔀 Both<span>Show all sources</span></button>
-        </div>
-      </div>
-    `;
-    parentBubble.appendChild(panel);
-    panel.querySelectorAll('.tier-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tier = btn.dataset.tier;
-        info.tier = tier;
-        renderPartsPanelContent(panel, info, oemSources, tier);
-      });
-    });
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return;
-  }
-
-  // Tier already known - render directly
-  renderPartsPanelContent(panel, info, oemSources, info.tier);
+  // Always render BOTH OEM and Aftermarket sections together
+  renderPartsPanelContent(panel, info, oemSources, 'both');
   parentBubble.appendChild(panel);
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -1990,19 +2020,22 @@ function buildMoparUrl(makeSlug, model, category) {
 }
 
 function renderPartsPanelContent(panel, info, oemSources, tier) {
-  // tier is 'oem' | 'aftermarket' | 'both'
+  // tier is 'oem' | 'aftermarket' | 'both' — we now always pass 'both'
   const showOem = tier === 'oem' || tier === 'both';
   const showAftermarket = tier === 'aftermarket' || tier === 'both';
 
   let html = `
     <div class="parts-panel-header">
       <strong>🔧 Find these parts online</strong>
-      <span class="parts-panel-vehicle">${escapeHtml(info.vehicle || 'vehicle')} · <em>${escapeHtml(tier === 'both' ? 'OEM + Aftermarket' : tier.toUpperCase())}</em></span>
+      <span class="parts-panel-vehicle">${escapeHtml(info.vehicle || 'vehicle')}</span>
+    </div>
+    <div class="parts-panel-instruction">
+      Click a link to find the exact part. Once you confirm the actual price on the retailer's site, come back and tell the bot — it'll then give you the final accurate quote.
     </div>
   `;
 
   if (showOem && oemSources.length === 0) {
-    html += `<div class="parts-panel-note">⚠️ No specific OEM dealer found for "${escapeHtml(info.make)}". Falling back to aftermarket sources only.</div>`;
+    html += `<div class="parts-panel-note">⚠️ No specific OEM dealer matched "${escapeHtml(info.make)}". Showing aftermarket sources only.</div>`;
   }
 
   const partsList = info.parts.length > 0
@@ -2012,41 +2045,56 @@ function renderPartsPanelContent(panel, info, oemSources, tier) {
   for (const partName of partsList) {
     html += `<div class="parts-panel-section">
       <div class="parts-panel-part">${escapeHtml(partName)}</div>
-      <div class="source-grid">
     `;
 
+    // === OEM PARTS section ===
     if (showOem && oemSources.length > 0) {
-      // For each matching OEM source, show TWO links:
-      //  1. Official brand site (manufacturer.ca) — 100% brand-authentic
-      //  2. Search results on a verified parts dealer using Google site-search
-      //     (Google indexes only real pages → links never 404)
+      html += '<div class="parts-section-header oem">⭐ OEM PARTS</div>';
+      html += '<div class="source-grid">';
       for (const src of oemSources) {
-        // Link 1: Official manufacturer site
+        // Link 1: Official manufacturer site (always brand-authentic, never 404)
         html += renderSourceLink({
-          name: '⭐ ' + src.officialLabel,
-          region: 'Verified brand site',
+          name: src.officialLabel,
+          region: 'Official brand site',
           logo: src.logo,
           notes: 'The official manufacturer site for ' + src.name
         }, src.official);
 
-        // Link 2: Google site-search restricted to the parts dealer
-        const query = (partName === 'All parts')
-          ? info.vehicle
-          : `${partName} ${info.vehicle}`.trim();
-        const siteSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query + ' site:' + src.site)}`;
+        // Link 2: Direct site search using JUST the part name + make.
+        // Simple queries return results; complex ones (year + model + part) return nothing.
+        // The user uses the retailer's own VIN/year picker on their site for fitment.
+        const oemQuery = (partName === 'All parts')
+          ? `${src.name} parts`
+          : `${partName} ${src.name}`;
+        const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(oemQuery + ' on ' + src.site)}`;
         html += renderSourceLink({
-          name: '🛒 Search ' + src.siteLabel + ' for "' + partName + '"',
-          region: 'Live product results',
+          name: 'Search Google: ' + src.siteLabel,
+          region: 'Find part on the dealer site',
           logo: '🔍',
-          notes: 'Google search restricted to ' + src.site + ' — guaranteed to land on real product pages'
-        }, siteSearchUrl);
+          notes: 'Google search for ' + partName + ' ' + src.name + ' on ' + src.site
+        }, googleUrl);
+
+        // Link 3: Retailer homepage (always works, user uses their search bar)
+        html += renderSourceLink({
+          name: src.siteLabel + ' (homepage)',
+          region: 'Browse catalog by VIN/model',
+          logo: '🛒',
+          notes: 'Open ' + src.site + ' and use their VIN/year picker to find your specific part'
+        }, 'https://www.' + src.site + '/');
       }
+      html += '</div>';
     }
 
+    // === AFTERMARKET PARTS section ===
     if (showAftermarket) {
-      html += '<div class="source-grid-label">💲 Aftermarket (any brand)</div>';
+      html += '<div class="parts-section-header aftermarket">💲 AFTERMARKET PARTS</div>';
+      html += '<div class="source-grid">';
+      // Use just the part name as the query — retailers handle vehicle filtering
+      // via their own VIN/year picker on the page. Including vehicle in the query
+      // returns "no results found" because retailers don't index pages that way.
+      const aftermarketQuery = (partName === 'All parts') ? info.vehicle : partName;
       for (const src of UNIVERSAL_AFTERMARKET) {
-        const url = src.url(`${partName} ${info.vehicle}`.trim());
+        const url = src.url(aftermarketQuery);
         html += renderSourceLink({
           name: src.name,
           region: src.region,
@@ -2054,9 +2102,10 @@ function renderPartsPanelContent(panel, info, oemSources, tier) {
           notes: src.notes
         }, url);
       }
+      html += '</div>';
     }
 
-    html += `</div></div>`;
+    html += `</div>`;
   }
 
   panel.innerHTML = html;
