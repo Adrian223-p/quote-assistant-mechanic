@@ -1425,227 +1425,314 @@ function parseQuote(md) {
    ============================================================ */
 
 const BRAND_OEM = [
+  // Each entry has TWO link types:
+  //   official: the manufacturer's own brand-authentic site (bmw.ca, toyota.ca, etc.)
+  //   site:     a verified parts dealer domain used for Google site-search
+  //             (Google returns real product pages → no 404s, lands close to the part)
+
   // ---- Japanese ----
   { match: /\bacura\b|\bmdx\b|\brdx\b|\btlx\b|\bilx\b|\bnsx\b/i,
-    name: 'Acura Parts Warehouse', logo: '🇯🇵', region: 'OEM Acura',
-    home: 'https://www.acurapartswarehouse.com/',
+    name: 'Acura', logo: '🇯🇵', region: 'OEM Acura',
+    official: 'https://www.acura.ca/owners/parts-and-accessories',
+    officialLabel: 'Acura Canada (Official)',
     site: 'acurapartswarehouse.com',
+    siteLabel: 'Acura Parts Warehouse',
     notes: 'Genuine Acura OEM parts' },
   { match: /\bhonda\b|\bcivic\b|\baccord\b|\bcr-v\b|\bcrv\b|\bhr-v\b|\bhrv\b|\bpilot\b|\bodyssey\b|\bridgeline\b|\bpassport\b|\bfit\b|\binsight\b/i,
-    name: 'Honda Parts Now', logo: '🇯🇵', region: 'OEM Honda',
-    home: 'https://www.hondapartsnow.com/',
+    name: 'Honda', logo: '🇯🇵', region: 'OEM Honda',
+    official: 'https://www.honda.ca/owners/service-and-parts',
+    officialLabel: 'Honda Canada (Official)',
     site: 'hondapartsnow.com',
+    siteLabel: 'Honda Parts Now',
     notes: 'Genuine Honda OEM parts' },
   { match: /\binfiniti\b|\bq50\b|\bq60\b|\bqx50\b|\bqx60\b|\bqx80\b/i,
-    name: 'Infiniti Parts Deal', logo: '🇯🇵', region: 'OEM Infiniti',
-    home: 'https://www.infinitipartsdeal.com/',
+    name: 'Infiniti', logo: '🇯🇵', region: 'OEM Infiniti',
+    official: 'https://www.infiniti.ca/owners/genuine-infiniti-parts.html',
+    officialLabel: 'Infiniti Canada (Official)',
     site: 'infinitipartsdeal.com',
+    siteLabel: 'Infiniti Parts Deal',
     notes: 'Genuine Infiniti OEM parts' },
   { match: /\blexus\b/i,
-    name: 'Lexus Parts Now', logo: '🇯🇵', region: 'OEM Lexus',
-    home: 'https://www.lexuspartsnow.com/',
+    name: 'Lexus', logo: '🇯🇵', region: 'OEM Lexus',
+    official: 'https://www.lexus.ca/lexus/en/owners/maintenance-and-care',
+    officialLabel: 'Lexus Canada (Official)',
     site: 'lexuspartsnow.com',
+    siteLabel: 'Lexus Parts Now',
     notes: 'Genuine Lexus OEM parts' },
   { match: /\bmazda\b|\bmx-5\b|\bcx-3\b|\bcx-5\b|\bcx-9\b|\bcx-30\b|\bcx-50\b|\bcx-90\b|\bmiata\b|\brx-7\b|\brx-8\b/i,
-    name: 'Real Mazda Parts', logo: '🇯🇵', region: 'OEM Mazda',
-    home: 'https://www.realmazdaparts.com/',
+    name: 'Mazda', logo: '🇯🇵', region: 'OEM Mazda',
+    official: 'https://www.mazda.ca/en/owners/genuine-mazda-parts-accessories/',
+    officialLabel: 'Mazda Canada (Official)',
     site: 'realmazdaparts.com',
+    siteLabel: 'Real Mazda Parts',
     notes: 'Genuine Mazda OEM parts' },
   { match: /\bmitsubishi\b|\boutlander\b|\beclipse\s+cross\b|\bmirage\b|\blancer\b|\brvr\b/i,
-    name: 'Mitsubishi Parts Direct', logo: '🇯🇵', region: 'OEM Mitsubishi',
-    home: 'https://www.mitsubishipartsdirect.com/',
+    name: 'Mitsubishi', logo: '🇯🇵', region: 'OEM Mitsubishi',
+    official: 'https://www.mitsubishi-motors.ca/en/owners/parts-and-accessories',
+    officialLabel: 'Mitsubishi Canada (Official)',
     site: 'mitsubishipartsdirect.com',
+    siteLabel: 'Mitsubishi Parts Direct',
     notes: 'Genuine Mitsubishi OEM parts' },
   { match: /\bnissan\b|\baltima\b|\bsentra\b|\bmaxima\b|\brogue\b|\bmurano\b|\bpathfinder\b|\bfrontier\b|\btitan\b|\barmada\b|\bkicks\b|\bleaf\b|\bgt-r\b|\b370z\b|\bversa\b/i,
-    name: 'Nissan Parts Deal', logo: '🇯🇵', region: 'OEM Nissan',
-    home: 'https://www.nissanpartsdeal.com/',
+    name: 'Nissan', logo: '🇯🇵', region: 'OEM Nissan',
+    official: 'https://www.nissan.ca/owners/genuine-nissan-parts.html',
+    officialLabel: 'Nissan Canada (Official)',
     site: 'nissanpartsdeal.com',
+    siteLabel: 'Nissan Parts Deal',
     notes: 'Genuine Nissan OEM parts' },
   { match: /\bsubaru\b|\bimpreza\b|\boutback\b|\bforester\b|\bcrosstrek\b|\blegacy\b|\bascent\b|\bwrx\b|\bsti\b|\bbrz\b/i,
-    name: 'Subaru Parts Deal', logo: '🇯🇵', region: 'OEM Subaru',
-    home: 'https://www.subarupartsdeal.com/',
+    name: 'Subaru', logo: '🇯🇵', region: 'OEM Subaru',
+    official: 'https://www.subaru.ca/WebPage.aspx?WebSiteID=233',
+    officialLabel: 'Subaru Canada (Official)',
     site: 'subarupartsdeal.com',
+    siteLabel: 'Subaru Parts Deal',
     notes: 'Genuine Subaru OEM parts' },
   { match: /\btoyota\b|\bcamry\b|\bcorolla\b|\brav4\b|\bhighlander\b|\btacoma\b|\btundra\b|\bprius\b|\bsienna\b|\b4runner\b|\bsequoia\b|\bvenza\b|\bavalon\b|\byaris\b|\bcrown\b|\bscion\b/i,
-    name: 'Toyota Parts Deal', logo: '🇯🇵', region: 'OEM Toyota',
-    home: 'https://www.toyotapartsdeal.com/',
+    name: 'Toyota', logo: '🇯🇵', region: 'OEM Toyota',
+    official: 'https://www.toyota.ca/toyota/en/owners/parts-service',
+    officialLabel: 'Toyota Canada (Official)',
     site: 'toyotapartsdeal.com',
+    siteLabel: 'Toyota Parts Deal',
     notes: 'Genuine Toyota OEM parts' },
 
   // ---- Korean ----
   { match: /\bgenesis\b|\bg70\b|\bg80\b|\bg90\b|\bgv70\b|\bgv80\b/i,
-    name: 'Genesis Canada', logo: '🇰🇷', region: 'OEM Genesis',
-    home: 'https://www.genesis.com/ca/en.html',
+    name: 'Genesis', logo: '🇰🇷', region: 'OEM Genesis',
+    official: 'https://www.genesis.com/ca/en/owner/parts-and-accessories.html',
+    officialLabel: 'Genesis Canada (Official)',
     site: 'genesis.com',
-    notes: 'Parts via Genesis Canada dealers' },
+    siteLabel: 'Genesis Parts Catalog',
+    notes: 'Genuine Genesis OEM parts via dealers' },
   { match: /\bhyundai\b|\belantra\b|\bsonata\b|\btucson\b|\bsanta\s*fe\b|\bkona\b|\bpalisade\b|\bveloster\b|\bioniq\b/i,
-    name: 'Hyundai Parts Deal', logo: '🇰🇷', region: 'OEM Hyundai',
-    home: 'https://www.hyundaipartsdeal.com/',
+    name: 'Hyundai', logo: '🇰🇷', region: 'OEM Hyundai',
+    official: 'https://www.hyundaicanada.com/en/owners/parts-and-accessories',
+    officialLabel: 'Hyundai Canada (Official)',
     site: 'hyundaipartsdeal.com',
+    siteLabel: 'Hyundai Parts Deal',
     notes: 'Genuine Hyundai OEM parts' },
   { match: /\bkia\b|\bforte\b|\boptima\b|\bsorento\b|\bsportage\b|\btelluride\b|\bsoul\b|\bstinger\b|\bcarnival\b|\bniro\b|\bk5\b/i,
-    name: 'Kia Parts Now', logo: '🇰🇷', region: 'OEM Kia',
-    home: 'https://www.kiapartsnow.com/',
+    name: 'Kia', logo: '🇰🇷', region: 'OEM Kia',
+    official: 'https://www.kia.ca/owners/parts-and-accessories',
+    officialLabel: 'Kia Canada (Official)',
     site: 'kiapartsnow.com',
+    siteLabel: 'Kia Parts Now',
     notes: 'Genuine Kia OEM parts' },
 
   // ---- American ----
   { match: /\bbuick\b|\benclave\b|\bencore\b|\benvision\b|\bregal\b|\blacrosse\b/i,
-    name: 'GM Parts Direct (Buick)', logo: '🇺🇸', region: 'OEM Buick',
-    home: 'https://www.gmpartsdirect.com/',
+    name: 'Buick', logo: '🇺🇸', region: 'OEM Buick',
+    official: 'https://www.buick.ca/owner-centre/maintenance/parts-accessories',
+    officialLabel: 'Buick Canada (Official)',
     site: 'gmpartsdirect.com',
+    siteLabel: 'GM Parts Direct',
     notes: 'Genuine Buick OEM parts' },
   { match: /\bcadillac\b|\bescalade\b|\bxts\b|\bcts\b|\bats\b|\bct[456]\b|\bxt[456]\b|\bsrx\b/i,
-    name: 'GM Parts Direct (Cadillac)', logo: '🇺🇸', region: 'OEM Cadillac',
-    home: 'https://www.gmpartsdirect.com/',
+    name: 'Cadillac', logo: '🇺🇸', region: 'OEM Cadillac',
+    official: 'https://www.cadillaccanada.ca/ownership/maintenance',
+    officialLabel: 'Cadillac Canada (Official)',
     site: 'gmpartsdirect.com',
+    siteLabel: 'GM Parts Direct',
     notes: 'Genuine Cadillac OEM parts' },
   { match: /\bchevy\b|\bchevrolet\b|\bsilverado\b|\btahoe\b|\bsuburban\b|\bequinox\b|\btraverse\b|\bcolorado\b|\bcamaro\b|\bcorvette\b|\bmalibu\b|\bcruze\b|\bspark\b|\btrax\b|\btrailblazer\b|\bblazer\b|\bbolt\b/i,
-    name: 'GM Parts Direct (Chevrolet)', logo: '🇺🇸', region: 'OEM Chevrolet',
-    home: 'https://www.gmpartsdirect.com/',
+    name: 'Chevrolet', logo: '🇺🇸', region: 'OEM Chevrolet',
+    official: 'https://www.chevrolet.ca/owners/maintenance/parts-accessories',
+    officialLabel: 'Chevrolet Canada (Official)',
     site: 'gmpartsdirect.com',
+    siteLabel: 'GM Parts Direct',
     notes: 'Genuine Chevrolet OEM parts' },
   { match: /\bchrysler\b|\b300\b|\bpacifica\b|\baspen\b/i,
-    name: 'Mopar Parts Overstock', logo: '🇺🇸', region: 'OEM Chrysler',
-    home: 'https://www.moparpartsoverstock.com/',
+    name: 'Chrysler', logo: '🇺🇸', region: 'OEM Chrysler',
+    official: 'https://www.chrysler.ca/en/owners/parts-and-service.html',
+    officialLabel: 'Chrysler Canada (Official)',
     site: 'moparpartsoverstock.com',
-    notes: 'Genuine Chrysler OEM parts' },
+    siteLabel: 'Mopar Parts Overstock',
+    notes: 'Genuine Chrysler/Mopar OEM parts' },
   { match: /\bdodge\b|\bcharger\b|\bchallenger\b|\bdurango\b|\bjourney\b|\bgrand\s+caravan\b|\bcaliber\b|\bdart\b/i,
-    name: 'Mopar Parts Overstock', logo: '🇺🇸', region: 'OEM Dodge',
-    home: 'https://www.moparpartsoverstock.com/',
+    name: 'Dodge', logo: '🇺🇸', region: 'OEM Dodge',
+    official: 'https://www.dodge.ca/en/owners/parts-and-service.html',
+    officialLabel: 'Dodge Canada (Official)',
     site: 'moparpartsoverstock.com',
-    notes: 'Genuine Dodge OEM parts' },
+    siteLabel: 'Mopar Parts Overstock',
+    notes: 'Genuine Dodge/Mopar OEM parts' },
   { match: /\bford\b|\bf-150\b|\bf150\b|\bf-250\b|\bf250\b|\bf-350\b|\bf350\b|\bescape\b|\bexplorer\b|\bedge\b|\bexpedition\b|\branger\b|\bbronco\b|\bmaverick\b|\bfocus\b|\bfusion\b|\bfiesta\b|\btaurus\b|\btransit\b|\bmustang\b|\becosport\b/i,
-    name: 'Ford Parts Giant', logo: '🇺🇸', region: 'OEM Ford',
-    home: 'https://www.fordpartsgiant.com/',
+    name: 'Ford', logo: '🇺🇸', region: 'OEM Ford',
+    official: 'https://www.ford.ca/owner/owner-resources/parts-and-accessories/',
+    officialLabel: 'Ford Canada (Official)',
     site: 'fordpartsgiant.com',
+    siteLabel: 'Ford Parts Giant',
     notes: 'Genuine Ford OEM parts' },
   { match: /\bgmc\b|\bsierra\b|\byukon\b|\bacadia\b|\bterrain\b|\bcanyon\b|\bsavana\b|\benvoy\b/i,
-    name: 'GM Parts Direct (GMC)', logo: '🇺🇸', region: 'OEM GMC',
-    home: 'https://www.gmpartsdirect.com/',
+    name: 'GMC', logo: '🇺🇸', region: 'OEM GMC',
+    official: 'https://www.gmc.ca/owner-centre/maintenance/parts-accessories',
+    officialLabel: 'GMC Canada (Official)',
     site: 'gmpartsdirect.com',
+    siteLabel: 'GM Parts Direct',
     notes: 'Genuine GMC OEM parts' },
   { match: /\bjeep\b|\bwrangler\b|\bgrand\s+cherokee\b|\bcherokee\b|\bcompass\b|\brenegade\b|\bgladiator\b|\bpatriot\b|\bliberty\b/i,
-    name: 'Mopar Parts Overstock (Jeep)', logo: '🇺🇸', region: 'OEM Jeep',
-    home: 'https://www.moparpartsoverstock.com/',
+    name: 'Jeep', logo: '🇺🇸', region: 'OEM Jeep',
+    official: 'https://www.jeep.ca/en/owners/parts-and-service.html',
+    officialLabel: 'Jeep Canada (Official)',
     site: 'moparpartsoverstock.com',
-    notes: 'Genuine Jeep OEM parts' },
+    siteLabel: 'Mopar Parts Overstock',
+    notes: 'Genuine Jeep/Mopar OEM parts' },
   { match: /\blincoln\b|\bnavigator\b|\bcorsair\b|\baviator\b|\bnautilus\b|\bmkz\b|\bmkx\b|\bmkc\b|\bmkt\b/i,
-    name: 'Ford Parts Giant (Lincoln)', logo: '🇺🇸', region: 'OEM Lincoln',
-    home: 'https://www.fordpartsgiant.com/',
+    name: 'Lincoln', logo: '🇺🇸', region: 'OEM Lincoln',
+    official: 'https://www.lincolncanada.com/owners/parts-service/',
+    officialLabel: 'Lincoln Canada (Official)',
     site: 'fordpartsgiant.com',
+    siteLabel: 'Ford Parts Giant',
     notes: 'Lincoln parts via Ford group' },
   { match: /\bram\s?\d|\bram\s+1500\b|\bram\s+2500\b|\bram\s+3500\b|\bdakota\b|\bpromaster\b/i,
-    name: 'Mopar Parts Overstock (RAM)', logo: '🇺🇸', region: 'OEM RAM',
-    home: 'https://www.moparpartsoverstock.com/',
+    name: 'RAM', logo: '🇺🇸', region: 'OEM RAM',
+    official: 'https://www.ramtruck.ca/en/owners/parts-and-service.html',
+    officialLabel: 'RAM Canada (Official)',
     site: 'moparpartsoverstock.com',
-    notes: 'Genuine RAM OEM parts' },
+    siteLabel: 'Mopar Parts Overstock',
+    notes: 'Genuine RAM/Mopar OEM parts' },
 
   // ---- German ----
   { match: /\baudi\b|\ba[34678]\b|\bq[3578]\b|\bs[345678]\b|\brs\d?\b|\btt\b|\be-tron\b/i,
-    name: 'Audi USA Parts', logo: '🇩🇪', region: 'OEM Audi',
-    home: 'https://www.audiusaparts.com/',
+    name: 'Audi', logo: '🇩🇪', region: 'OEM Audi',
+    official: 'https://www.audi.ca/ca/web/en/owners-area/audi-service.html',
+    officialLabel: 'Audi Canada (Official)',
     site: 'audiusaparts.com',
+    siteLabel: 'Audi USA Parts',
     notes: 'Genuine Audi OEM parts' },
   { match: /\bbmw\b|\b[1234567]\s*series\b|\bx[1-7]\b|\bm[358]\b|\bz[34]\b|\bi[3458]\b/i,
-    name: 'BMW Parts Deal', logo: '🇩🇪', region: 'OEM BMW',
-    home: 'https://www.bmwpartsdeal.com/',
+    name: 'BMW', logo: '🇩🇪', region: 'OEM BMW',
+    official: 'https://shop.bmw.ca/',
+    officialLabel: 'BMW Canada (Official Shop)',
     site: 'bmwpartsdeal.com',
+    siteLabel: 'BMW Parts Deal',
     notes: 'Genuine BMW OEM parts' },
   { match: /\bmercedes\b|\bbenz\b|\bamg\b|\b[cegs]-class\b|\bgl[abcels]\b|\bsprinter\b|\bsl\b|\bslk\b|\bslc\b|\beqs\b|\beqe\b/i,
-    name: 'Mercedes Parts Center', logo: '🇩🇪', region: 'OEM Mercedes',
-    home: 'https://www.mercedespartscenter.com/',
+    name: 'Mercedes-Benz', logo: '🇩🇪', region: 'OEM Mercedes',
+    official: 'https://www.mercedes-benz.ca/en/owners/parts-services',
+    officialLabel: 'Mercedes-Benz Canada (Official)',
     site: 'mercedespartscenter.com',
+    siteLabel: 'Mercedes Parts Center',
     notes: 'Genuine Mercedes-Benz OEM parts' },
   { match: /\bporsche\b|\b911\b|\bcayenne\b|\bmacan\b|\bpanamera\b|\btaycan\b|\b718\b|\bcayman\b|\bboxster\b/i,
-    name: 'Suncoast Porsche Parts', logo: '🇩🇪', region: 'OEM Porsche',
-    home: 'https://www.suncoastparts.com/',
+    name: 'Porsche', logo: '🇩🇪', region: 'OEM Porsche',
+    official: 'https://www.porsche.com/canada/en/accessoriesandservice/',
+    officialLabel: 'Porsche Canada (Official)',
     site: 'suncoastparts.com',
+    siteLabel: 'Suncoast Porsche Parts',
     notes: 'Genuine Porsche OEM parts' },
   { match: /\bvolkswagen\b|^vw\b|\sjetta\b|\sgolf\b|\spassat\b|\stiguan\b|\satlas\b|\staos\b|\sid\.?\s*4\b|\sbeetle\b|\sgti\b|\sarteon\b/i,
-    name: 'VW Parts Vortex', logo: '🇩🇪', region: 'OEM Volkswagen',
-    home: 'https://www.vwpartsvortex.com/',
+    name: 'Volkswagen', logo: '🇩🇪', region: 'OEM Volkswagen',
+    official: 'https://www.vw.ca/en/owners/genuine-vw-parts-and-accessories.html',
+    officialLabel: 'Volkswagen Canada (Official)',
     site: 'vwpartsvortex.com',
+    siteLabel: 'VW Parts Vortex',
     notes: 'Genuine VW OEM parts' },
 
   // ---- British ----
   { match: /\bjaguar\b|\bf-pace\b|\bf-type\b|\bxf\b|\bxe\b|\bxj\b|\bi-pace\b|\be-pace\b/i,
-    name: 'Jaguar Parts Direct (Canada)', logo: '🇬🇧', region: 'OEM Jaguar',
-    home: 'https://www.jaguarpartsdirect.ca/',
+    name: 'Jaguar', logo: '🇬🇧', region: 'OEM Jaguar',
+    official: 'https://www.jaguar.ca/owners/parts-and-accessories/index.html',
+    officialLabel: 'Jaguar Canada (Official)',
     site: 'jaguarpartsdirect.ca',
+    siteLabel: 'Jaguar Parts Direct (CA)',
     notes: 'OEM Jaguar parts, ships from Canada' },
   { match: /\bland\s*rover\b|\brange\s*rover\b|\bdefender\b|\bdiscovery\b|\bfreelander\b|\bevoque\b|\bvelar\b/i,
-    name: 'Land Rover Parts Direct (Canada)', logo: '🇬🇧', region: 'OEM Land Rover',
-    home: 'https://www.landroverpartsdirect.ca/',
+    name: 'Land Rover', logo: '🇬🇧', region: 'OEM Land Rover',
+    official: 'https://www.landrover.ca/owners/genuine-parts-and-accessories.html',
+    officialLabel: 'Land Rover Canada (Official)',
     site: 'landroverpartsdirect.ca',
+    siteLabel: 'Land Rover Parts Direct (CA)',
     notes: 'OEM Land Rover parts, ships from Canada' },
   { match: /\bmini\b|\bcountryman\b|\bclubman\b|\bpaceman\b/i,
-    name: 'FCP Euro (MINI)', logo: '🇬🇧', region: 'OEM MINI',
-    home: 'https://www.fcpeuro.com/',
+    name: 'MINI', logo: '🇬🇧', region: 'OEM MINI',
+    official: 'https://www.mini.ca/en_CA/home/explore/owners.html',
+    officialLabel: 'MINI Canada (Official)',
     site: 'fcpeuro.com',
+    siteLabel: 'FCP Euro (MINI)',
     notes: 'OEM and aftermarket MINI parts' },
   { match: /\brolls.?royce\b|\bphantom\b|\bghost\b|\bwraith\b|\bdawn\b|\bcullinan\b/i,
-    name: 'Rolls-Royce (Find a Dealer)', logo: '🇬🇧', region: 'OEM Rolls-Royce',
-    home: 'https://www.rolls-roycemotorcars.com/',
+    name: 'Rolls-Royce', logo: '🇬🇧', region: 'OEM Rolls-Royce',
+    official: 'https://www.rolls-roycemotorcars.com/en-CA/owners.html',
+    officialLabel: 'Rolls-Royce Canada (Official)',
     site: 'rolls-roycemotorcars.com',
-    notes: 'Parts via authorized dealer' },
+    siteLabel: 'Rolls-Royce Dealer Locator',
+    notes: 'Parts only via authorized dealer' },
 
   // ---- Italian ----
   { match: /\balfa\s*romeo\b|\bgiulia\b|\bstelvio\b|\b4c\b|\bgiulietta\b/i,
-    name: 'Mopar (Alfa Romeo)', logo: '🇮🇹', region: 'OEM Alfa Romeo',
-    home: 'https://www.moparpartsoverstock.com/',
+    name: 'Alfa Romeo', logo: '🇮🇹', region: 'OEM Alfa Romeo',
+    official: 'https://www.alfaromeo.ca/en/owners/parts-and-service.html',
+    officialLabel: 'Alfa Romeo Canada (Official)',
     site: 'moparpartsoverstock.com',
+    siteLabel: 'Mopar Parts (Alfa)',
     notes: 'Alfa Romeo via Mopar (FCA group)' },
   { match: /\bferrari\b|\b488\b|\b458\b|\bf8\b|\bportofino\b|\broma\b|\bsf90\b|\b812\b|\b296\b|\bpurosangue\b/i,
-    name: 'Ferrari (Find a Dealer)', logo: '🇮🇹', region: 'OEM Ferrari',
-    home: 'https://www.ferrari.com/',
+    name: 'Ferrari', logo: '🇮🇹', region: 'OEM Ferrari',
+    official: 'https://www.ferrari.com/en-EN/auto/dealers',
+    officialLabel: 'Ferrari (Find a Dealer)',
     site: 'ferrari.com',
+    siteLabel: 'Ferrari Parts Info',
     notes: 'Parts via authorized dealer only' },
   { match: /\blamborghini\b|\bhuracan\b|\baventador\b|\burus\b|\brevuelto\b|\bgallardo\b/i,
-    name: 'Lamborghini (Find a Dealer)', logo: '🇮🇹', region: 'OEM Lamborghini',
-    home: 'https://www.lamborghini.com/',
+    name: 'Lamborghini', logo: '🇮🇹', region: 'OEM Lamborghini',
+    official: 'https://www.lamborghini.com/en-en/dealers',
+    officialLabel: 'Lamborghini (Find a Dealer)',
     site: 'lamborghini.com',
+    siteLabel: 'Lamborghini Parts Info',
     notes: 'Parts via authorized dealer only' },
   { match: /\bmaserati\b|\bghibli\b|\bquattroporte\b|\blevante\b|\bgranturismo\b|\bmc20\b/i,
-    name: 'Maserati (Find a Dealer)', logo: '🇮🇹', region: 'OEM Maserati',
-    home: 'https://www.maserati.com/',
+    name: 'Maserati', logo: '🇮🇹', region: 'OEM Maserati',
+    official: 'https://www.maserati.com/ca/en/dealers',
+    officialLabel: 'Maserati Canada (Find a Dealer)',
     site: 'maserati.com',
+    siteLabel: 'Maserati Parts Info',
     notes: 'Parts via authorized dealer only' },
 
   // ---- Swedish ----
   { match: /\bvolvo\b|\bxc[34679]0\b|\bs[69]0\b|\bv[69]0\b|\bc[34]0\b/i,
-    name: 'Volvo Parts Webstore', logo: '🇸🇪', region: 'OEM Volvo',
-    home: 'https://www.volvopartswebstore.com/',
+    name: 'Volvo', logo: '🇸🇪', region: 'OEM Volvo',
+    official: 'https://www.volvocars.com/en-ca/owners/owner-info/genuine-parts-and-accessories',
+    officialLabel: 'Volvo Canada (Official)',
     site: 'volvopartswebstore.com',
+    siteLabel: 'Volvo Parts Webstore',
     notes: 'Genuine Volvo OEM parts' },
   { match: /\bpolestar\b|\bpolestar\s?[12345]\b/i,
-    name: 'Polestar (Service)', logo: '🇸🇪', region: 'OEM Polestar',
-    home: 'https://www.polestar.com/',
+    name: 'Polestar', logo: '🇸🇪', region: 'OEM Polestar',
+    official: 'https://www.polestar.com/ca/service/',
+    officialLabel: 'Polestar Canada (Official)',
     site: 'polestar.com',
+    siteLabel: 'Polestar Service Info',
     notes: 'Polestar service centre' },
 
   // ---- EV-focused ----
   { match: /\btesla\b|\bmodel\s*[3sxy]\b|\bcybertruck\b|\broadster\b/i,
-    name: 'Tesla (Service)', logo: '⚡', region: 'OEM Tesla',
-    home: 'https://www.tesla.com/',
+    name: 'Tesla', logo: '⚡', region: 'OEM Tesla',
+    official: 'https://www.tesla.com/en_ca/support/service-visit-information',
+    officialLabel: 'Tesla Canada (Official)',
     site: 'tesla.com',
-    notes: 'Tesla parts via service center' },
+    siteLabel: 'Tesla Service Info',
+    notes: 'Tesla parts via Tesla Service' },
 
   // ---- French (limited Canadian availability) ----
   { match: /\bpeugeot\b/i,
-    name: 'Peugeot (Stellantis)', logo: '🇫🇷', region: 'OEM Peugeot',
-    home: 'https://www.peugeot.com/',
+    name: 'Peugeot', logo: '🇫🇷', region: 'OEM Peugeot',
+    official: 'https://www.peugeot.com/',
+    officialLabel: 'Peugeot Global (Official)',
     site: 'peugeot.com',
+    siteLabel: 'Peugeot Parts Info',
     notes: 'Limited Canadian availability' },
   { match: /\brenault\b/i,
     name: 'Renault', logo: '🇫🇷', region: 'OEM Renault',
-    home: 'https://www.renault.com/',
+    official: 'https://www.renault.com/',
+    officialLabel: 'Renault Global (Official)',
     site: 'renault.com',
+    siteLabel: 'Renault Parts Info',
     notes: 'Not officially sold in Canada' },
   { match: /\bcitroen\b|\bcitroën\b/i,
     name: 'Citroën', logo: '🇫🇷', region: 'OEM Citroën',
-    home: 'https://www.citroen.com/',
+    official: 'https://www.citroen.com/',
+    officialLabel: 'Citroën Global (Official)',
     site: 'citroen.com',
+    siteLabel: 'Citroën Parts Info',
     notes: 'Not officially sold in Canada' },
 ];
 
@@ -1772,6 +1859,136 @@ function showPartsLinks(quoteText, parentBubble) {
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// Convert "F-150" -> "f_150", "CR-V" -> "cr_v", "Range Rover Sport" -> "range_rover_sport"
+function slugifyForRevolutionParts(s) {
+  if (!s) return '';
+  return s.toString().trim().toLowerCase()
+    .replace(/[\s\-]+/g, '_')   // spaces and hyphens become underscores
+    .replace(/[^a-z0-9_]/g, ''); // strip anything else
+}
+
+// For Mopar Parts Overstock pattern: /s/Make__Model/Category.html
+// Make has hyphens (e.g. "Alfa-Romeo"), Model uses hyphens for spaces (e.g. "Grand-Cherokee")
+function slugifyForMopar(s) {
+  if (!s) return '';
+  return s.toString().trim()
+    .replace(/\s+/g, '-')          // spaces become hyphens
+    .replace(/[^a-zA-Z0-9\-]/g, ''); // strip anything else
+}
+
+// Convert a generic part name into the slug each platform uses
+//   "Front Brake Pads" -> "brake_pads" (RevolutionParts) or "Brakes" (Mopar category)
+// We try to match common parts to known categories.
+function partNameToSlug(partName, pattern) {
+  if (!partName) return null;
+  const p = partName.toLowerCase();
+
+  if (pattern === 'mopar') {
+    // Mopar uses broad categories, not exact part names
+    if (/brake|rotor|caliper|pad/.test(p)) return 'Brakes';
+    if (/oil\s*filter|engine\s*oil/.test(p)) return 'Engine';
+    if (/spark\s*plug|ignition|coil/.test(p)) return 'Engine';
+    if (/timing\s*belt|water\s*pump|thermostat|radiator/.test(p)) return 'Cooling-and-Heating';
+    if (/strut|shock|control\s*arm|tie\s*rod|sway\s*bar|ball\s*joint/.test(p)) return 'Suspension';
+    if (/cv\s*axle|driveshaft|differential|clutch/.test(p)) return 'Drivetrain';
+    if (/battery|alternator|starter|sensor|headlight/.test(p)) return 'Electrical';
+    if (/exhaust|muffler|catalytic/.test(p)) return 'Exhaust';
+    if (/a\/c|ac\s|compressor|condenser|blower|hvac|heater/.test(p)) return 'Cooling-and-Heating';
+    if (/fuel\s*pump|fuel\s*filter|injector/.test(p)) return 'Fuel-Delivery';
+    if (/wiper|mirror|door/.test(p)) return 'Body';
+    return 'Brakes'; // safe default
+  }
+
+  // RevolutionParts pattern: convert part name to slug (e.g. "Front Brake Pads" -> "brake_pads")
+  // Strip position words (front, rear, left, right) and quantifiers
+  let cleaned = p
+    .replace(/\b(front|rear|left|right|driver|passenger|upper|lower|inner|outer)\b/g, '')
+    .replace(/\b(set|kit|each|pair)\b/g, '')
+    .replace(/\bbrake\s*rotor\b/g, 'brake_disc')          // rotor → disc on these sites
+    .replace(/\bbrake\s*pads?\s*and\s*rotors?\b/g, 'brake_pads')  // pad+rotor → search pads
+    .replace(/\bspark\s*plug\b/g, 'spark_plug')
+    .replace(/\bignition\s*coil\b/g, 'ignition_coil')
+    .replace(/\boxygen\s*sensor\b/g, 'oxygen_sensor')
+    .replace(/\bo2\s*sensor\b/g, 'oxygen_sensor')
+    .replace(/\bcv\s*axle\b/g, 'cv_axle')
+    .replace(/\bcontrol\s*arm\b/g, 'control_arm')
+    .replace(/\btie\s*rod\b/g, 'tie_rod_end')
+    .replace(/\bsway\s*bar\s*link\b/g, 'sway_bar_link')
+    .replace(/\bwheel\s*bearing\b/g, 'wheel_hub')
+    .replace(/\btiming\s*belt\b/g, 'timing_belt_kit')
+    .replace(/\bwater\s*pump\b/g, 'water_pump')
+    .replace(/\bthermostat\b/g, 'thermostat')
+    .replace(/\bradiator\b/g, 'radiator')
+    .replace(/\boil\s*filter\b/g, 'oil_filter')
+    .replace(/\bcabin\s*(air\s*)?filter\b/g, 'cabin_air_filter')
+    .replace(/\bengine\s*air\s*filter\b/g, 'air_filter')
+    .replace(/\bair\s*filter\b/g, 'air_filter')
+    .replace(/\bbattery\b/g, 'battery')
+    .replace(/\balternator\b/g, 'alternator')
+    .replace(/\bstarter\b/g, 'starter_motor')
+    .replace(/\bheadlight\b/g, 'headlight_assembly')
+    .replace(/\bmuffler\b/g, 'muffler')
+    .replace(/\bcatalytic\s*converter\b/g, 'catalytic_converter')
+    .replace(/\bstrut\b/g, 'strut_assembly')
+    .replace(/\bshock\b/g, 'shock_absorber')
+    .replace(/\bball\s*joint\b/g, 'ball_joint')
+    .replace(/\bspark\s*plug\b/g, 'spark_plug')
+    .replace(/[^\w\s]/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/^_+|_+$/g, '');
+
+  // If we ended up with something useful, return it; otherwise skip
+  if (cleaned.length < 3) return null;
+  return cleaned;
+}
+
+// Extract just the year and the make+model from "2019 BMW 330i 3.0L turbo-diesel"
+function extractYearMakeModel(vehicleString) {
+  if (!vehicleString) return { year: '', model: '' };
+  const cleaned = vehicleString.trim();
+  // Find a 4-digit year (1980-2030)
+  const yearMatch = cleaned.match(/\b(19[89]\d|20[0-3]\d)\b/);
+  const year = yearMatch ? yearMatch[1] : '';
+
+  // Remove year, then take the next 1-3 words as make+model (skipping the make)
+  let rest = cleaned.replace(/\b(19[89]\d|20[0-3]\d)\b/, '').trim();
+
+  // Strip engine specs like "3.0L", "V6", "turbo", "diesel", "hybrid", "AWD", etc.
+  rest = rest.replace(/\b(\d\.\d\s?L?|V[68]|I\d|TDI|turbo[a-z]*|diesel|hybrid|electric|awd|fwd|rwd|4wd|automatic|manual|sedan|coupe|wagon|hatchback|suv|truck|crew\s*cab|extended\s*cab|regular\s*cab|sport|hse|se|le|xle|s|sl|sr|ex|lx|dx|premium|limited|ltd|signature)\b/gi, '');
+  rest = rest.replace(/\s+/g, ' ').trim();
+
+  // First word is the make, rest is the model
+  const parts = rest.split(/\s+/);
+  const model = parts.slice(1).join(' ') || parts[0] || '';
+
+  return { year, model: model.trim() };
+}
+
+// Build a direct-to-product URL for a RevolutionParts dealer site
+function buildRevolutionUrl(domain, makeSlug, year, model, partSlug) {
+  const modelSlug = slugifyForRevolutionParts(model);
+  if (!partSlug) {
+    // Fall back to make-only catalog page
+    return `https://www.${domain}/oem-${makeSlug}.html`;
+  }
+  if (year && modelSlug) {
+    return `https://www.${domain}/oem-${year}-${makeSlug}-${modelSlug}-${partSlug}.html`;
+  }
+  if (modelSlug) {
+    return `https://www.${domain}/oem-${makeSlug}-${modelSlug}-${partSlug}.html`;
+  }
+  return `https://www.${domain}/oem-${makeSlug}-${partSlug}.html`;
+}
+
+// Build a category page URL for Mopar Parts Overstock
+function buildMoparUrl(makeSlug, model, category) {
+  const modelSlug = slugifyForMopar(model);
+  if (modelSlug && category) {
+    return `https://www.moparpartsoverstock.com/s/${makeSlug}__${modelSlug}/${category}.html`;
+  }
+  return `https://www.moparpartsoverstock.com/`;
+}
+
 function renderPartsPanelContent(panel, info, oemSources, tier) {
   // tier is 'oem' | 'aftermarket' | 'both'
   const showOem = tier === 'oem' || tier === 'both';
@@ -1799,21 +2016,30 @@ function renderPartsPanelContent(panel, info, oemSources, tier) {
     `;
 
     if (showOem && oemSources.length > 0) {
-      html += '<div class="source-grid-label">⭐ OEM (genuine factory parts)</div>';
+      // For each matching OEM source, show TWO links:
+      //  1. Official brand site (manufacturer.ca) — 100% brand-authentic
+      //  2. Search results on a verified parts dealer using Google site-search
+      //     (Google indexes only real pages → links never 404)
       for (const src of oemSources) {
-        // Two links per OEM source:
-        //   1. Site-Search via Google → always lands on a real product page
-        //   2. Homepage → lets user browse the catalog by year/make/model
-        const query = `${partName} ${info.vehicle}`.trim();
+        // Link 1: Official manufacturer site
+        html += renderSourceLink({
+          name: '⭐ ' + src.officialLabel,
+          region: 'Verified brand site',
+          logo: src.logo,
+          notes: 'The official manufacturer site for ' + src.name
+        }, src.official);
+
+        // Link 2: Google site-search restricted to the parts dealer
+        const query = (partName === 'All parts')
+          ? info.vehicle
+          : `${partName} ${info.vehicle}`.trim();
         const siteSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query + ' site:' + src.site)}`;
-        html += renderSourceLink(
-          { ...src, name: `${src.name} — Search`, region: 'Lands on product page' },
-          siteSearchUrl
-        );
-        html += renderSourceLink(
-          { ...src, name: `${src.name} — Browse Catalog`, region: src.region + ' · Year/Make/Model' },
-          src.home
-        );
+        html += renderSourceLink({
+          name: '🛒 Search ' + src.siteLabel + ' for "' + partName + '"',
+          region: 'Live product results',
+          logo: '🔍',
+          notes: 'Google search restricted to ' + src.site + ' — guaranteed to land on real product pages'
+        }, siteSearchUrl);
       }
     }
 
@@ -1821,7 +2047,12 @@ function renderPartsPanelContent(panel, info, oemSources, tier) {
       html += '<div class="source-grid-label">💲 Aftermarket (any brand)</div>';
       for (const src of UNIVERSAL_AFTERMARKET) {
         const url = src.url(`${partName} ${info.vehicle}`.trim());
-        html += renderSourceLink(src, url);
+        html += renderSourceLink({
+          name: src.name,
+          region: src.region,
+          logo: src.logo,
+          notes: src.notes
+        }, url);
       }
     }
 
