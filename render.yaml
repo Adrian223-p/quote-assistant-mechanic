@@ -5,7 +5,10 @@ services:
     plan: free
     region: ohio
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --timeout 120 --workers 2 --bind 0.0.0.0:$PORT server:app
+    # Single worker + threads = lower memory than multiple workers.
+    # max-requests recycles the worker after 200 requests to release accumulated memory.
+    # worker-tmp-dir on /dev/shm avoids slow disk I/O for gunicorn's internal heartbeat.
+    startCommand: gunicorn --timeout 120 --workers 1 --threads 4 --max-requests 200 --max-requests-jitter 50 --worker-tmp-dir /dev/shm --bind 0.0.0.0:$PORT server:app
     healthCheckPath: /health
     autoDeploy: true
     envVars:
@@ -17,3 +20,17 @@ services:
         sync: false
       - key: GOOGLE_SERVICE_ACCOUNT_JSON
         sync: false
+      # Memory tuning (override these in Render dashboard if needed)
+      - key: SHEET_CACHE_TTL
+        value: "60"
+      - key: MAX_REQUEST_BYTES
+        value: "65536"
+      - key: MAX_MESSAGES_IN_CONTEXT
+        value: "20"
+      - key: MAX_MESSAGE_CHARS
+        value: "8000"
+      # Python memory tuning - smaller heap allocations
+      - key: PYTHONMALLOC
+        value: malloc
+      - key: MALLOC_ARENA_MAX
+        value: "2"
