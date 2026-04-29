@@ -1,25 +1,21 @@
 """
 Bay 1 — Owner Quote Console
-Flask backend that reads the AI-optimized Google Sheet on every chat request,
-builds a system prompt from live data, and calls the Anthropic API.
+Flask backend that reads the AI-optimized Google Sheet, builds a system
+prompt from live data, and calls the Anthropic API.
 
-Expects a Google Sheet with these tabs (all flat tables, row 1 = headers):
-  shop_config          (key, value, unit, notes)
-  labour_rates         (job_id, category, job_name, flat_hours, rate_type, keywords, notes)
-  parts_catalog        (part_id, category, part_name, oem_cost, aftermarket_cost, reman_cost, core_charge, unit, notes)
-  vehicle_multipliers  (category_id, category_name, labour_multiplier, parts_multiplier, keywords, notes)
-  environmental_fees   (fee_id, fee_name, amount, unit, applies_when, notes)
-  job_bundles          (bundle_id, primary_job, related_items, rationale)
-  quotes_log           (timestamp, vehicle, job_description, labour, parts, fees, hst, total)
-
-Env vars required:
-  ANTHROPIC_API_KEY
-  GOOGLE_SHEET_ID
-  GOOGLE_SERVICE_ACCOUNT_JSON   (full JSON contents of service account key)
+Memory-optimized for Render free tier (512 MB):
+- Sheet data is cached in memory for SHEET_CACHE_TTL seconds (60s default)
+- Request size limits enforced
+- Conversation history bounded
+- Garbage collection forced after each request
+- Single gunicorn worker recommended (see Procfile)
 """
 
 import os
 import json
+import gc
+import time
+import threading
 from datetime import datetime
 
 from flask import Flask, request, jsonify, send_from_directory
@@ -27,7 +23,14 @@ from anthropic import Anthropic
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
+# ----- Configuration -----
+SHEET_CACHE_TTL = int(os.environ.get("SHEET_CACHE_TTL", "60"))      # seconds
+MAX_REQUEST_BYTES = int(os.environ.get("MAX_REQUEST_BYTES", "65536"))  # 64 KB
+MAX_MESSAGES_IN_CONTEXT = int(os.environ.get("MAX_MESSAGES_IN_CONTEXT", "20"))
+MAX_MESSAGE_CHARS = int(os.environ.get("MAX_MESSAGE_CHARS", "8000"))
+
 app = Flask(__name__, static_folder="public", static_url_path="")
+app.config["MAX_CONTENT_LENGTH"] = MAX_REQUEST_BYTES  # reject oversized requests
 
 anthropic_client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
@@ -37,7 +40,11 @@ _creds = service_account.Credentials.from_service_account_info(
     _creds_info,
     scopes=["https://www.googleapis.com/auth/spreadsheets"],
 )
+# cache_discovery=False prevents loading the giant discovery JSON into memory
 sheets = build("sheets", "v4", credentials=_creds, cache_discovery=False)
+
+# Free up the credential dict — we don't need to keep it in memory after build()
+_creds_info = None
 
 RANGES = [
     "shop_config!A1:D100",
@@ -48,9 +55,20 @@ RANGES = [
     "job_bundles!A1:D50",
 ]
 
+# ----- Sheet data cache -----
+# Reading the sheet on every request is expensive (memory + API calls).
+# Cache parsed table data for SHEET_CACHE_TTL seconds.
+_sheet_cache = {"data": None, "fetched_at": 0}
+_cache_lock = threading.Lock()
+
 
 def fetch_sheet_tables():
-    """Pull fresh data on every call. Returns dict of {tab_name: [record_dict, ...]}."""
+    """Pull sheet data with caching. Returns dict of {tab_name: [record_dict, ...]}."""
+    now = time.time()
+    with _cache_lock:
+        if _sheet_cache["data"] is not None and (now - _sheet_cache["fetched_at"]) < SHEET_CACHE_TTL:
+            return _sheet_cache["data"]
+
     resp = (
         sheets.spreadsheets()
         .values()
@@ -76,7 +94,23 @@ def fetch_sheet_tables():
             rec = {h: (row[i] if i < len(row) else "") for i, h in enumerate(headers)}
             records.append(rec)
         out[tab] = records
+
+    # Free the raw response object — we have what we need in `out`
+    resp = None
+
+    # Store in cache
+    with _cache_lock:
+        _sheet_cache["data"] = out
+        _sheet_cache["fetched_at"] = time.time()
+
     return out
+
+
+def invalidate_sheet_cache():
+    """Force the next fetch_sheet_tables() call to refresh from Google."""
+    with _cache_lock:
+        _sheet_cache["data"] = None
+        _sheet_cache["fetched_at"] = 0
 
 
 def get_shop_config(records):
@@ -386,11 +420,25 @@ grand_total = pre_tax + hst
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
+    response = None
     try:
         body = request.get_json(force=True) or {}
         messages = body.get("messages", [])
         if not messages:
             return jsonify({"error": "No messages provided"}), 400
+
+        # Bound the conversation history to prevent unbounded memory growth.
+        # Keep only the most recent N messages (conversation pairs).
+        if len(messages) > MAX_MESSAGES_IN_CONTEXT:
+            messages = messages[-MAX_MESSAGES_IN_CONTEXT:]
+
+        # Truncate any individual message that's too long
+        bounded_messages = []
+        for msg in messages:
+            content = msg.get("content", "")
+            if isinstance(content, str) and len(content) > MAX_MESSAGE_CHARS:
+                content = content[:MAX_MESSAGE_CHARS] + "\n\n[...truncated for memory bounds...]"
+            bounded_messages.append({"role": msg.get("role", "user"), "content": content})
 
         system_prompt = build_system_prompt()
 
@@ -398,18 +446,25 @@ def chat():
             model="claude-sonnet-4-6",
             max_tokens=2500,
             system=system_prompt,
-            messages=messages,
+            messages=bounded_messages,
         )
-        return jsonify({
+
+        result = {
             "content": [
                 {"type": b.type, "text": getattr(b, "text", "")}
                 for b in response.content
                 if getattr(b, "type", None) == "text"
             ]
-        })
+        }
+        return jsonify(result)
     except Exception as e:
         app.logger.exception("chat error")
         return jsonify({"error": str(e)}), 500
+    finally:
+        # Free large objects and force garbage collection to keep memory low.
+        # Critical on the 512 MB free tier.
+        response = None
+        gc.collect()
 
 
 @app.route("/api/log-quote", methods=["POST"])
@@ -503,12 +558,66 @@ def get_config():
 
 @app.route("/health")
 def health():
+    """Lightweight health check (used by Render to verify the service is alive)."""
     return jsonify({"status": "ok", "time": datetime.utcnow().isoformat()})
+
+
+@app.route("/health/memory")
+def health_memory():
+    """Detailed memory diagnostics. Useful when investigating OOM events."""
+    try:
+        import resource
+        # ru_maxrss is in KB on Linux, bytes on macOS
+        rss_kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        rss_mb = rss_kb / 1024  # Linux: KB → MB
+
+        cache_age = None
+        with _cache_lock:
+            if _sheet_cache.get("fetched_at"):
+                cache_age = round(time.time() - _sheet_cache["fetched_at"], 1)
+            cache_has_data = _sheet_cache.get("data") is not None
+
+        return jsonify({
+            "status": "ok",
+            "rss_mb": round(rss_mb, 1),
+            "rss_pct_of_512mb": round((rss_mb / 512) * 100, 1),
+            "sheet_cache_age_seconds": cache_age,
+            "sheet_cache_populated": cache_has_data,
+            "sheet_cache_ttl_seconds": SHEET_CACHE_TTL,
+            "max_request_bytes": MAX_REQUEST_BYTES,
+            "max_messages_in_context": MAX_MESSAGES_IN_CONTEXT,
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.errorhandler(413)
+def request_too_large(e):
+    """Friendly error when the user sends a payload larger than MAX_CONTENT_LENGTH."""
+    return jsonify({
+        "error": f"Request too large. Max payload is {MAX_REQUEST_BYTES} bytes ({MAX_REQUEST_BYTES // 1024} KB). Try clearing the conversation and starting fresh."
+    }), 413
+
+
+@app.errorhandler(500)
+def internal_error(e):
+    """Force gc on any 500 error to release memory before returning."""
+    gc.collect()
+    return jsonify({"error": "Internal server error. Please try again."}), 500
 
 
 @app.route("/")
 def root():
     return send_from_directory("public", "index.html")
+
+
+# Per-request: clean up after each response to keep memory predictable.
+@app.after_request
+def cleanup_after_request(response):
+    # Only force gc on heavy endpoints (chat is the big one)
+    if request.path in ("/api/chat", "/api/past-quotes"):
+        gc.collect()
+    return response
 
 
 if __name__ == "__main__":
