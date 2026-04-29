@@ -1508,10 +1508,17 @@ async function sendMessage() {
   const bubble = addMessage('assistant', '', true);
 
   try {
+    // Send only the last 20 messages to keep payload small (matches backend bound).
+    // Long conversations grow unboundedly otherwise — both bandwidth and memory.
+    const MAX_HISTORY = 20;
+    const messagesToSend = conversation.length > MAX_HISTORY
+      ? conversation.slice(-MAX_HISTORY)
+      : conversation;
+
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: conversation }),
+      body: JSON.stringify({ messages: messagesToSend }),
     });
 
     if (!res.ok) {
