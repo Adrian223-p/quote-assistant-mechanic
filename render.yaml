@@ -23,8 +23,10 @@ services:
       # Memory tuning (override these in Render dashboard if needed)
       - key: SHEET_CACHE_TTL
         value: "60"
+      # CHANGED: 200 KB (was 64 KB). Fits a 20-message × 8000-char conversation
+      # without triggering 413 errors mid-session.
       - key: MAX_REQUEST_BYTES
-        value: "65536"
+        value: "200000"
       - key: MAX_MESSAGES_IN_CONTEXT
         value: "20"
       - key: MAX_MESSAGE_CHARS
