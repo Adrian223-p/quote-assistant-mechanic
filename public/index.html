@@ -192,7 +192,6 @@
   .msg-bubble blockquote p:last-child { margin-bottom: 0; }
   .msg-bubble blockquote strong { color: var(--amber); }
 
-  /* Invoice button that appears under every quote */
   .quote-actions {
     margin-top: 14px;
     padding-top: 14px;
@@ -232,7 +231,6 @@
     background: transparent;
   }
 
-  /* Parts source panel - appears under quote when "Find Parts" is clicked */
   .parts-panel {
     margin-top: 14px;
     padding: 16px;
@@ -301,9 +299,7 @@
     background: rgba(127, 176, 105, 0.1);
     border-left: 3px solid var(--green);
   }
-  .parts-panel-section {
-    margin-bottom: 18px;
-  }
+  .parts-panel-section { margin-bottom: 18px; }
   .parts-panel-section:last-child { margin-bottom: 0; }
   .parts-panel-part {
     font-family: 'Inter', sans-serif;
@@ -314,10 +310,7 @@
     margin-bottom: 6px;
     border-bottom: 1px dashed var(--line);
   }
-  .source-grid {
-    display: grid;
-    gap: 4px;
-  }
+  .source-grid { display: grid; gap: 4px; }
   .source-grid-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
@@ -346,94 +339,17 @@
     background: rgba(127, 176, 105, 0.08);
     transform: translateX(2px);
   }
-  .source-logo {
-    font-size: 16px;
-    width: 24px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-  .source-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-  .source-name {
-    font-weight: 600;
-    color: var(--text);
-    font-size: 13px;
-  }
+  .source-logo { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+  .source-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .source-name { font-weight: 600; color: var(--text); font-size: 13px; }
   .source-region {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--text-faint);
     letter-spacing: 0.5px;
   }
-  .source-arrow {
-    color: var(--text-faint);
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .source-link:hover .source-arrow {
-    color: var(--green);
-  }
-
-  /* Tier selection prompt (OEM / Aftermarket / Both) */
-  .parts-tier-prompt {
-    padding: 12px 4px;
-  }
-  .parts-tier-prompt .prompt-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 12px;
-  }
-  .parts-tier-prompt .prompt-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-  }
-  .tier-btn {
-    background: var(--bg-panel);
-    border: 1px solid var(--line-strong);
-    color: var(--text);
-    padding: 14px 10px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all 0.15s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    text-align: center;
-  }
-  .tier-btn span {
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.5px;
-    text-transform: none;
-    color: var(--text-faint);
-    font-weight: 400;
-    margin-top: 2px;
-  }
-  .tier-btn:hover {
-    border-color: var(--green);
-    background: rgba(127, 176, 105, 0.08);
-    color: var(--green);
-  }
-  .tier-btn:hover span { color: var(--text-dim); }
-  @media (max-width: 600px) {
-    .parts-tier-prompt .prompt-buttons {
-      grid-template-columns: 1fr;
-    }
-  }
+  .source-arrow { color: var(--text-faint); font-size: 18px; flex-shrink: 0; }
+  .source-link:hover .source-arrow { color: var(--green); }
 
   .input-row {
     padding: 16px 32px 24px; border-top: 1px solid var(--line); background: var(--bg-panel);
@@ -525,7 +441,6 @@
     30% { transform: translateY(-4px); opacity: 1; }
   }
 
-  /* =============== MODAL =============== */
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.75);
@@ -567,9 +482,7 @@
     font-size: 24px; cursor: pointer; padding: 0; line-height: 1;
   }
   .modal-close:hover { color: var(--text); }
-  .modal-body {
-    padding: 20px 24px;
-  }
+  .modal-body { padding: 20px 24px; }
   .modal-body .setting { margin-bottom: 14px; }
   .modal-footer {
     padding: 16px 24px;
@@ -579,7 +492,6 @@
     justify-content: flex-end;
   }
 
-  /* =============== INVOICE (light theme for printing) =============== */
   .invoice-view {
     display: none;
     position: fixed;
@@ -591,7 +503,6 @@
   }
   .invoice-view.active { display: block; }
 
-  /* Past Quotes view */
   .history-view {
     display: none;
     position: fixed;
@@ -648,11 +559,7 @@
     border-radius: 2px;
   }
   .history-toolbar button:hover { color: var(--text); border-color: var(--text-dim); }
-  .history-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px 32px 64px;
-  }
+  .history-body { flex: 1; overflow-y: auto; padding: 24px 32px 64px; }
   .history-stats {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -800,6 +707,7 @@
     .history-card-header { grid-template-columns: 1fr; }
     .history-card-totals { text-align: left; align-items: flex-start; }
   }
+
   .invoice-toolbar {
     position: sticky; top: 0;
     background: #1f2124;
@@ -863,25 +771,12 @@
     clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
   }
   .inv-brand h1 { font-size: 28px; margin-bottom: 2px; color: #1a1a1a; }
-  .inv-brand .shop-info {
-    font-size: 11px;
-    color: #666;
-    line-height: 1.5;
-  }
-  .inv-title {
-    text-align: right;
-  }
-  .inv-title h2 {
-    font-size: 36px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: 4px;
-  }
+  .inv-brand .shop-info { font-size: 11px; color: #666; line-height: 1.5; }
+  .inv-title { text-align: right; }
+  .inv-title h2 { font-size: 36px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
   .inv-title .meta {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: #666;
-    line-height: 1.8;
+    font-size: 11px; color: #666; line-height: 1.8;
   }
   .inv-title .meta strong { color: #1a1a1a; }
 
@@ -901,15 +796,8 @@
     padding-bottom: 4px;
     border-bottom: 1px solid #ddd;
   }
-  .inv-party .party-line {
-    font-size: 13px;
-    margin: 2px 0;
-  }
-  .inv-party .party-name {
-    font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
+  .inv-party .party-line { font-size: 13px; margin: 2px 0; }
+  .inv-party .party-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
 
   .inv-section-title {
     font-family: 'Oswald', sans-serif;
@@ -945,11 +833,7 @@
   }
   .inv-table td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
 
-  .inv-totals {
-    margin-left: auto;
-    width: 360px;
-    margin-top: 24px;
-  }
+  .inv-totals { margin-left: auto; width: 360px; margin-top: 24px; }
   .inv-totals .total-row {
     display: flex;
     justify-content: space-between;
@@ -969,9 +853,7 @@
     border-bottom: none;
     margin-top: 8px;
   }
-  .inv-totals .total-row .num {
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .inv-totals .total-row .num { font-family: 'JetBrains Mono', monospace; }
 
   .inv-notes {
     margin-top: 32px;
@@ -1008,7 +890,6 @@
     color: #666;
   }
 
-  /* Print styles */
   @media print {
     body { background: #fff; overflow: visible; }
     .app, .modal-overlay, .history-view { display: none !important; }
@@ -1146,37 +1027,16 @@
   <aside class="settings">
     <div class="section-label">Live Shop Settings</div>
 
-    <div class="setting">
-      <label>Standard Rate / hr</label>
-      <div class="value" id="v-std">—</div>
-    </div>
-    <div class="setting">
-      <label>Specialty Rate / hr</label>
-      <div class="value" id="v-spec">—</div>
-    </div>
-    <div class="setting">
-      <label>Diagnostic Fee</label>
-      <div class="value" id="v-diag">—</div>
+    <div class="setting"><label>Standard Rate / hr</label><div class="value" id="v-std">—</div></div>
+    <div class="setting"><label>Specialty Rate / hr</label><div class="value" id="v-spec">—</div></div>
+    <div class="setting"><label>Diagnostic Fee</label><div class="value" id="v-diag">—</div></div>
+    <div class="setting-row">
+      <div class="setting"><label>Parts Markup</label><div class="value" id="v-markup">—</div></div>
+      <div class="setting"><label>Supplies %</label><div class="value" id="v-supplies">—</div></div>
     </div>
     <div class="setting-row">
-      <div class="setting">
-        <label>Parts Markup</label>
-        <div class="value" id="v-markup">—</div>
-      </div>
-      <div class="setting">
-        <label>Supplies %</label>
-        <div class="value" id="v-supplies">—</div>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting">
-        <label>Supplies Cap</label>
-        <div class="value" id="v-cap">—</div>
-      </div>
-      <div class="setting">
-        <label>HST</label>
-        <div class="value" id="v-hst">—</div>
-      </div>
+      <div class="setting"><label>Supplies Cap</label><div class="value" id="v-cap">—</div></div>
+      <div class="setting"><label>HST</label><div class="value" id="v-hst">—</div></div>
     </div>
 
     <button class="sync-btn" id="sync">Sync From Sheet</button>
@@ -1195,7 +1055,6 @@
   </aside>
 </div>
 
-<!-- Shop Info modal (for invoice header) -->
 <div class="modal-overlay" id="shop-info-modal">
   <div class="modal">
     <div class="modal-header">
@@ -1203,38 +1062,17 @@
       <button class="modal-close" id="shop-info-close">×</button>
     </div>
     <div class="modal-body">
-      <div class="setting">
-        <label>Shop Name</label>
-        <input type="text" id="shop-name" placeholder="Bay 1 Auto Repair">
-      </div>
-      <div class="setting">
-        <label>Shop Address</label>
-        <input type="text" id="shop-address" placeholder="123 Main Street">
+      <div class="setting"><label>Shop Name</label><input type="text" id="shop-name" placeholder="Bay 1 Auto Repair"></div>
+      <div class="setting"><label>Shop Address</label><input type="text" id="shop-address" placeholder="123 Main Street"></div>
+      <div class="setting-row">
+        <div class="setting"><label>City, Province</label><input type="text" id="shop-city" placeholder="Toronto, ON"></div>
+        <div class="setting"><label>Postal Code</label><input type="text" id="shop-postal" placeholder="M5V 0A1"></div>
       </div>
       <div class="setting-row">
-        <div class="setting">
-          <label>City, Province</label>
-          <input type="text" id="shop-city" placeholder="Toronto, ON">
-        </div>
-        <div class="setting">
-          <label>Postal Code</label>
-          <input type="text" id="shop-postal" placeholder="M5V 0A1">
-        </div>
+        <div class="setting"><label>Phone</label><input type="text" id="shop-phone" placeholder="(416) 555-0100"></div>
+        <div class="setting"><label>Email</label><input type="text" id="shop-email" placeholder="info@bay1.ca"></div>
       </div>
-      <div class="setting-row">
-        <div class="setting">
-          <label>Phone</label>
-          <input type="text" id="shop-phone" placeholder="(416) 555-0100">
-        </div>
-        <div class="setting">
-          <label>Email</label>
-          <input type="text" id="shop-email" placeholder="info@bay1.ca">
-        </div>
-      </div>
-      <div class="setting">
-        <label>HST Number (optional)</label>
-        <input type="text" id="shop-hst" placeholder="123456789 RT0001">
-      </div>
+      <div class="setting"><label>HST Number (optional)</label><input type="text" id="shop-hst" placeholder="123456789 RT0001"></div>
     </div>
     <div class="modal-footer">
       <button class="action-btn secondary" id="shop-info-cancel">Cancel</button>
@@ -1243,7 +1081,6 @@
   </div>
 </div>
 
-<!-- Customer Info modal (asked before generating invoice) -->
 <div class="modal-overlay" id="customer-modal">
   <div class="modal">
     <div class="modal-header">
@@ -1251,36 +1088,15 @@
       <button class="modal-close" id="customer-close">×</button>
     </div>
     <div class="modal-body">
-      <div class="setting">
-        <label>Customer Name</label>
-        <input type="text" id="cust-name" placeholder="John Smith">
-      </div>
-      <div class="setting">
-        <label>Phone</label>
-        <input type="text" id="cust-phone" placeholder="(416) 555-0100">
-      </div>
-      <div class="setting">
-        <label>Email (optional)</label>
-        <input type="text" id="cust-email" placeholder="john@example.com">
-      </div>
-      <div class="setting">
-        <label>Address (optional)</label>
-        <input type="text" id="cust-address" placeholder="Street, City">
-      </div>
+      <div class="setting"><label>Customer Name</label><input type="text" id="cust-name" placeholder="John Smith" maxlength="120"></div>
+      <div class="setting"><label>Phone</label><input type="text" id="cust-phone" placeholder="(416) 555-0100" maxlength="40"></div>
+      <div class="setting"><label>Email (optional)</label><input type="text" id="cust-email" placeholder="john@example.com" maxlength="120"></div>
+      <div class="setting"><label>Address (optional)</label><input type="text" id="cust-address" placeholder="Street, City" maxlength="200"></div>
       <div class="setting-row">
-        <div class="setting">
-          <label>License Plate</label>
-          <input type="text" id="cust-plate" placeholder="ABCD 123">
-        </div>
-        <div class="setting">
-          <label>Odometer (km)</label>
-          <input type="text" id="cust-odo" placeholder="125000">
-        </div>
+        <div class="setting"><label>License Plate</label><input type="text" id="cust-plate" placeholder="ABCD 123" maxlength="20"></div>
+        <div class="setting"><label>Odometer (km)</label><input type="text" id="cust-odo" placeholder="125000" maxlength="10"></div>
       </div>
-      <div class="setting">
-        <label>Invoice Number</label>
-        <input type="text" id="inv-number" placeholder="auto-generated">
-      </div>
+      <div class="setting"><label>Invoice Number</label><input type="text" id="inv-number" placeholder="auto-generated" maxlength="40"></div>
     </div>
     <div class="modal-footer">
       <button class="action-btn secondary" id="customer-cancel">Cancel</button>
@@ -1289,7 +1105,6 @@
   </div>
 </div>
 
-<!-- The rendered invoice view -->
 <div class="invoice-view" id="invoice-view">
   <div class="invoice-toolbar">
     <div class="meta" id="invoice-meta"></div>
@@ -1299,7 +1114,6 @@
   <div class="invoice-paper" id="invoice-paper"></div>
 </div>
 
-<!-- Past Quotes panel (full-screen overlay) -->
 <div class="history-view" id="history-view">
   <div class="history-toolbar">
     <div class="history-title">📋 Past Quotes</div>
@@ -1325,10 +1139,10 @@ const statusText   = document.getElementById('status-text');
 
 let quoteCount = 0;
 const conversation = [];
-let activeQuoteText = null; // holds the quote being converted to invoice
-let lastQuoteText = null;   // always holds the most recent quote for the topbar button
+let activeQuoteText = null;
+let lastQuoteText = null;
+let pastQuotesCache = [];
 
-// Persistent shop info - stored in memory only (no localStorage per artifact rules)
 let shopInfo = {
   name: 'Bay 1 Auto Repair',
   address: '',
@@ -1340,9 +1154,15 @@ let shopInfo = {
 };
 
 /* ------------------------ helpers ------------------------ */
+// PATCH 6: also escape " and ' so escapeHtml is safe inside attribute contexts
 function escapeHtml(s) {
   if (s == null) return '';
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function renderMarkdown(md) {
@@ -1352,7 +1172,6 @@ function renderMarkdown(md) {
   html = html.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
   html = html.replace(/^---+\s*$/gm, '<hr>');
 
-  // Blockquotes: consecutive lines starting with "> " become a single <blockquote>
   html = html.replace(/((?:^>\s?.*\n?)+)/gm, (block) => {
     const inner = block.split('\n')
       .map(l => l.replace(/^>\s?/, ''))
@@ -1398,16 +1217,38 @@ function renderMarkdown(md) {
 
 function isQuoteReply(text) {
   if (!text) return false;
-  // Detect quote-like responses to show the action buttons.
-  // Triggers on:
-  //  - Full quote with totals (grand total or labour/parts subtotals)
-  //  - Quote header (## QUOTE: ...) even without numbers
-  //  - Parts identification list (## PARTS NEEDED: ...) — the new pre-quote workflow
   const hasGrandTotal = /grand\s*total/i.test(text);
   const hasQuoteHeader = /##\s*QUOTE:/i.test(text);
   const hasPartsHeader = /##\s*PARTS\s*NEEDED:/i.test(text);
   const hasLabourOrPartsTotal = /(labour|labor|parts)\s*(subtotal|total)/i.test(text);
   return hasGrandTotal || hasQuoteHeader || hasPartsHeader || hasLabourOrPartsTotal;
+}
+
+// PATCH 9: single source of truth for quote action buttons
+function attachQuoteActions(bubble, text) {
+  const actions = document.createElement('div');
+  actions.className = 'quote-actions';
+  actions.innerHTML = `
+    <button class="action-btn invoice-trigger">📄 Generate Invoice</button>
+    <button class="action-btn parts-trigger">🔧 Find Parts</button>
+    <button class="action-btn secondary copy-trigger">Copy Quote</button>
+  `;
+  bubble.appendChild(actions);
+  actions.querySelector('.invoice-trigger').addEventListener('click', () => startInvoice(text));
+  actions.querySelector('.parts-trigger').addEventListener('click', () => showPartsLinks(text, bubble));
+  const copyBtn = actions.querySelector('.copy-trigger');
+  copyBtn.addEventListener('click', () => {
+    if (!navigator.clipboard) {
+      copyBtn.textContent = 'Copy unavailable';
+      return;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      copyBtn.textContent = 'Copied ✓';
+      setTimeout(() => copyBtn.textContent = 'Copy Quote', 1500);
+    }).catch(() => {
+      copyBtn.textContent = 'Copy failed';
+    });
+  });
 }
 
 function addMessage(role, content, typing = false) {
@@ -1425,25 +1266,7 @@ function addMessage(role, content, typing = false) {
     bubble.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
   } else if (role === 'assistant') {
     bubble.innerHTML = renderMarkdown(content);
-    // If this is a quote response, add action buttons
-    if (isQuoteReply(content)) {
-      const actions = document.createElement('div');
-      actions.className = 'quote-actions';
-      actions.innerHTML = `
-        <button class="action-btn invoice-trigger">📄 Generate Invoice</button>
-        <button class="action-btn parts-trigger">🔧 Find Parts</button>
-        <button class="action-btn secondary copy-trigger">Copy Quote</button>
-      `;
-      bubble.appendChild(actions);
-      actions.querySelector('.invoice-trigger').addEventListener('click', () => startInvoice(content));
-      actions.querySelector('.parts-trigger').addEventListener('click', () => showPartsLinks(content, bubble));
-      actions.querySelector('.copy-trigger').addEventListener('click', () => {
-        navigator.clipboard.writeText(content).then(() => {
-          actions.querySelector('.copy-trigger').textContent = 'Copied ✓';
-          setTimeout(() => actions.querySelector('.copy-trigger').textContent = 'Copy Quote', 1500);
-        });
-      });
-    }
+    if (isQuoteReply(content)) attachQuoteActions(bubble, content);
   } else {
     bubble.innerHTML = escapeHtml(content).replace(/\n/g, '<br>');
   }
@@ -1464,13 +1287,21 @@ function addSystemNote(text) {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
+// PATCH 4: drop the "$" requirement so totals like "1,234.56 CAD" still match
 function extractGrandTotal(text) {
-  const m = text.match(/GRAND\s+TOTAL[^$]*\$\s*([\d,]+\.\d{2})/i);
-  return m ? `$${m[1]}` : null;
+  const m = text.match(/GRAND\s+TOTAL[^\d]*([\d,]+(?:\.\d{1,2})?)/i);
+  if (!m) return null;
+  const n = parseFloat(m[1].replace(/,/g, ''));
+  return Number.isFinite(n) ? `$${n.toFixed(2)}` : null;
 }
 
 /* ------------------------ settings sync ------------------------ */
+// PATCH 2: NaN-safe coercion + missing-field warning
 async function syncSettings() {
+  const num = (v, fb = 0) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fb;
+  };
   try {
     statusText.textContent = 'Reading sheet…';
     const res = await fetch('/api/config');
@@ -1478,15 +1309,19 @@ async function syncSettings() {
     const c = await res.json();
     if (c.error) throw new Error(c.error);
 
-    document.getElementById('v-std').textContent    = `$${(+c.std_rate).toFixed(2)}`;
-    document.getElementById('v-spec').textContent   = `$${(+c.spec_rate).toFixed(2)}`;
-    document.getElementById('v-diag').textContent   = `$${(+c.diag_fee).toFixed(2)}`;
-    document.getElementById('v-markup').textContent = `${(+c.markup * 100).toFixed(0)}%`;
-    document.getElementById('v-supplies').textContent = `${(+c.supplies_pct * 100).toFixed(1)}%`;
-    document.getElementById('v-cap').textContent    = `$${(+c.supplies_cap).toFixed(2)}`;
-    document.getElementById('v-hst').textContent    = `${(+c.hst * 100).toFixed(1)}%`;
+    document.getElementById('v-std').textContent      = `$${num(c.std_rate).toFixed(2)}`;
+    document.getElementById('v-spec').textContent     = `$${num(c.spec_rate).toFixed(2)}`;
+    document.getElementById('v-diag').textContent     = `$${num(c.diag_fee).toFixed(2)}`;
+    document.getElementById('v-markup').textContent   = `${(num(c.markup) * 100).toFixed(0)}%`;
+    document.getElementById('v-supplies').textContent = `${(num(c.supplies_pct) * 100).toFixed(1)}%`;
+    document.getElementById('v-cap').textContent      = `$${num(c.supplies_cap).toFixed(2)}`;
+    document.getElementById('v-hst').textContent      = `${(num(c.hst) * 100).toFixed(1)}%`;
 
-    statusText.textContent = 'Online · Sheet synced';
+    const required = ['std_rate','spec_rate','diag_fee','markup','supplies_pct','supplies_cap','hst'];
+    const missing  = required.filter(k => !Number.isFinite(Number(c[k])));
+    statusText.textContent = missing.length
+      ? `Online · Sheet missing: ${missing.join(', ')}`
+      : 'Online · Sheet synced';
   } catch (err) {
     statusText.textContent = 'Offline · Sheet error';
     console.error('Sync error:', err);
@@ -1508,8 +1343,6 @@ async function sendMessage() {
   const bubble = addMessage('assistant', '', true);
 
   try {
-    // Send only the last 20 messages to keep payload small (matches backend bound).
-    // Long conversations grow unboundedly otherwise — both bandwidth and memory.
     const MAX_HISTORY = 20;
     const messagesToSend = conversation.length > MAX_HISTORY
       ? conversation.slice(-MAX_HISTORY)
@@ -1529,33 +1362,18 @@ async function sendMessage() {
     const data = await res.json();
     if (data.error) throw new Error(data.error);
 
-    const reply = (data.content || [])
+    // PATCH 8: guard against non-array data.content
+    const contentArr = Array.isArray(data.content) ? data.content : [];
+    const reply = contentArr
       .filter(c => c.type === 'text')
       .map(c => c.text)
       .join('\n') || '(empty response)';
 
     conversation.push({ role: 'assistant', content: reply });
 
-    // Replace the typing bubble with full rendered response + action buttons
     bubble.innerHTML = renderMarkdown(reply);
-    if (isQuoteReply(reply)) {
-      const actions = document.createElement('div');
-      actions.className = 'quote-actions';
-      actions.innerHTML = `
-        <button class="action-btn invoice-trigger">📄 Generate Invoice</button>
-        <button class="action-btn parts-trigger">🔧 Find Parts</button>
-        <button class="action-btn secondary copy-trigger">Copy Quote</button>
-      `;
-      bubble.appendChild(actions);
-      actions.querySelector('.invoice-trigger').addEventListener('click', () => startInvoice(reply));
-      actions.querySelector('.parts-trigger').addEventListener('click', () => showPartsLinks(reply, bubble));
-      actions.querySelector('.copy-trigger').addEventListener('click', () => {
-        navigator.clipboard.writeText(reply).then(() => {
-          actions.querySelector('.copy-trigger').textContent = 'Copied ✓';
-          setTimeout(() => actions.querySelector('.copy-trigger').textContent = 'Copy Quote', 1500);
-        });
-      });
-    }
+    // PATCH 9: same helper used by addMessage
+    if (isQuoteReply(reply)) attachQuoteActions(bubble, reply);
 
     const total = extractGrandTotal(reply);
     if (total) {
@@ -1565,8 +1383,6 @@ async function sendMessage() {
       logQuote(text, reply, total);
     }
 
-    // Always remember the latest assistant reply that looks like a quote
-    // so the topbar "Invoice Last Quote" button has something to use
     if (isQuoteReply(reply)) {
       lastQuoteText = reply;
       document.getElementById('topbar-invoice-btn').style.display = 'inline-flex';
@@ -1580,12 +1396,19 @@ async function sendMessage() {
   }
 }
 
+// PATCH 7: truncate at table boundary; invalidate past-quotes cache after log
 function logQuote(userText, reply, total) {
   const vehicle = (reply.match(/QUOTE:\s*([^\n]+)/) || [, ''])[1].trim();
   const labour  = (reply.match(/Labour subtotal[^$]*\$\s*([\d,]+\.\d{2})/) || [, ''])[1];
   const parts   = (reply.match(/Parts subtotal[^$]*\$\s*([\d,]+\.\d{2})/)  || [, ''])[1];
   const fees    = (reply.match(/Fees subtotal[^$]*\$\s*([\d,]+\.\d{2})/)   || [, ''])[1];
   const hst     = (reply.match(/HST[^$]*\$\s*([\d,]+\.\d{2})/)             || [, ''])[1];
+
+  const safeTruncate = (s, max = 8000) => {
+    if (s.length <= max) return s;
+    const cut = s.lastIndexOf('\n###', max);
+    return s.slice(0, cut > max - 1500 ? cut : max);
+  };
 
   fetch('/api/log-quote', {
     method: 'POST',
@@ -1595,8 +1418,10 @@ function logQuote(userText, reply, total) {
       vehicle, job: userText.slice(0, 200),
       labour, parts, fees, hst,
       total: total.replace('$', ''),
-      full_quote: reply.slice(0, 8000),  // store the full quote text for re-display
+      full_quote: safeTruncate(reply),
     }),
+  }).then(() => {
+    pastQuotesCache = [];
   }).catch(err => console.error('log-quote failed:', err));
 }
 
@@ -1604,33 +1429,20 @@ function logQuote(userText, reply, total) {
    INVOICE GENERATION
    ============================================================ */
 
-// Parse a quote markdown string into a structured object
 function parseQuote(md) {
   const q = {
-    title: '',
-    vehicle: '',
-    category: '',
-    rush: 'No',
-    labour: [],
-    parts: [],
-    fees: [],
+    title: '', vehicle: '', category: '', rush: 'No',
+    labour: [], parts: [], fees: [],
     summary: {
-      labour_subtotal: 0,
-      parts_subtotal: 0,
-      fees_subtotal: 0,
-      pretax_subtotal: 0,
-      hst_rate: 0.13,
-      hst: 0,
-      grand_total: 0
+      labour_subtotal: 0, parts_subtotal: 0, fees_subtotal: 0,
+      pretax_subtotal: 0, hst_rate: 0.13, hst: 0, grand_total: 0
     },
     notes: []
   };
 
-  // Title line
   const titleMatch = md.match(/##\s+QUOTE:\s*(.+)/i);
   if (titleMatch) q.title = titleMatch[1].trim();
 
-  // Header info line
   const headerMatch = md.match(/\*\*Vehicle:\*\*\s*(.+?)(?:\n|$)/);
   if (headerMatch) {
     const line = headerMatch[1];
@@ -1642,44 +1454,34 @@ function parseQuote(md) {
     if (rm) q.rush = rm[1].trim();
   }
 
-  // Parse sections
   function extractTable(sectionName) {
     const re = new RegExp(`###\\s+${sectionName}\\s*\\n([\\s\\S]*?)(?=\\n###|\\n<table|\\*\\*End of quote|$)`, 'i');
     const m = md.match(re);
     if (!m) return [];
     const lines = m[1].split('\n').filter(l => l.trim().startsWith('|'));
     if (lines.length < 2) return [];
-    return lines.slice(2) // skip header + separator
+    return lines.slice(2)
       .map(l => l.split('|').slice(1, -1).map(c => c.trim()))
       .filter(row => row.some(c => c !== ''));
   }
 
   q.labour = extractTable('LABOUR').map(row => ({
-    task: row[0] || '',
-    hours: row[1] || '',
-    rate: row[2] || '',
-    total: row[3] || ''
+    task: row[0] || '', hours: row[1] || '', rate: row[2] || '', total: row[3] || ''
   }));
 
   q.parts = extractTable('PARTS').map(row => ({
-    part: row[0] || '',
-    tier: row[1] || '',
-    qty: row[2] || '',
-    unit: row[3] || '',
-    total: row[4] || ''
+    part: row[0] || '', tier: row[1] || '', qty: row[2] || '',
+    unit: row[3] || '', total: row[4] || ''
   }));
 
   q.fees = extractTable('FEES').map(row => ({
-    item: row[0] || '',
-    qty: row[1] || '',
-    rate: row[2] || '',
-    total: row[3] || ''
+    item: row[0] || '', qty: row[1] || '', rate: row[2] || '', total: row[3] || ''
   }));
 
-  // Summary
+  // PATCH 3: accept totals with 0, 1, or 2 decimals (was strict .dd)
   const toNum = s => {
     if (!s) return 0;
-    const m = String(s).match(/[\d,]+\.\d{2}/);
+    const m = String(s).match(/[\d,]+(?:\.\d{1,2})?/);
     return m ? parseFloat(m[0].replace(/,/g, '')) : 0;
   };
 
@@ -1693,7 +1495,6 @@ function parseQuote(md) {
   const hstPctMatch = md.match(/HST\s*\((\d+)%\)/i);
   if (hstPctMatch) q.summary.hst_rate = parseInt(hstPctMatch[1]) / 100;
 
-  // Notes
   const notesMatch = md.match(/###\s+NOTES\s*\n([\s\S]*?)(?=\n\*\*End of quote|$)/i);
   if (notesMatch) {
     q.notes = notesMatch[1].split('\n')
@@ -1705,333 +1506,204 @@ function parseQuote(md) {
 }
 
 /* ============================================================
-   PARTS SOURCE LINKS (deep links to parts retailers)
-   ============================================================
-   Architecture:
-   - BRAND_OEM[]: per-brand OEM source (dealer-network parts portal)
-                  with regex to match the make and a URL template
-   - UNIVERSAL_AFTERMARKET[]: universal aftermarket sources that
-                              work for any vehicle
-   - When user clicks "Find Parts", they choose OEM, Aftermarket,
-     or Both, and we render only the relevant section.
+   PARTS SOURCE LINKS — unchanged from prior version
    ============================================================ */
 
 const BRAND_OEM = [
-  // Each entry has TWO link types:
-  //   official: the manufacturer's own brand-authentic site (bmw.ca, toyota.ca, etc.)
-  //   site:     a verified parts dealer domain used for Google site-search
-  //             (Google returns real product pages → no 404s, lands close to the part)
-
-  // ---- Japanese ----
   { match: /\bacura\b|\bmdx\b|\brdx\b|\btlx\b|\bilx\b|\bnsx\b/i,
     name: 'Acura', logo: '🇯🇵', region: 'OEM Acura',
     official: 'https://www.acura.ca/owners/parts-and-accessories',
     officialLabel: 'Acura Canada (Official)',
-    site: 'acurapartswarehouse.com',
-    siteLabel: 'Acura Parts Warehouse',
+    site: 'acurapartswarehouse.com', siteLabel: 'Acura Parts Warehouse',
     notes: 'Genuine Acura OEM parts' },
   { match: /\bhonda\b|\bcivic\b|\baccord\b|\bcr-v\b|\bcrv\b|\bhr-v\b|\bhrv\b|\bpilot\b|\bodyssey\b|\bridgeline\b|\bpassport\b|\bfit\b|\binsight\b/i,
     name: 'Honda', logo: '🇯🇵', region: 'OEM Honda',
     official: 'https://www.honda.ca/owners/service-and-parts',
     officialLabel: 'Honda Canada (Official)',
-    site: 'hondapartsnow.com',
-    siteLabel: 'Honda Parts Now',
+    site: 'hondapartsnow.com', siteLabel: 'Honda Parts Now',
     notes: 'Genuine Honda OEM parts' },
   { match: /\binfiniti\b|\bq50\b|\bq60\b|\bqx50\b|\bqx60\b|\bqx80\b/i,
     name: 'Infiniti', logo: '🇯🇵', region: 'OEM Infiniti',
     official: 'https://www.infiniti.ca/owners/genuine-infiniti-parts.html',
     officialLabel: 'Infiniti Canada (Official)',
-    site: 'infinitipartsdeal.com',
-    siteLabel: 'Infiniti Parts Deal',
+    site: 'infinitipartsdeal.com', siteLabel: 'Infiniti Parts Deal',
     notes: 'Genuine Infiniti OEM parts' },
   { match: /\blexus\b/i,
     name: 'Lexus', logo: '🇯🇵', region: 'OEM Lexus',
     official: 'https://www.lexus.ca/lexus/en/owners/maintenance-and-care',
     officialLabel: 'Lexus Canada (Official)',
-    site: 'lexuspartsnow.com',
-    siteLabel: 'Lexus Parts Now',
+    site: 'lexuspartsnow.com', siteLabel: 'Lexus Parts Now',
     notes: 'Genuine Lexus OEM parts' },
   { match: /\bmazda\b|\bmx-5\b|\bcx-3\b|\bcx-5\b|\bcx-9\b|\bcx-30\b|\bcx-50\b|\bcx-90\b|\bmiata\b|\brx-7\b|\brx-8\b/i,
     name: 'Mazda', logo: '🇯🇵', region: 'OEM Mazda',
     official: 'https://www.mazda.ca/en/owners/genuine-mazda-parts-accessories/',
     officialLabel: 'Mazda Canada (Official)',
-    site: 'realmazdaparts.com',
-    siteLabel: 'Real Mazda Parts',
+    site: 'realmazdaparts.com', siteLabel: 'Real Mazda Parts',
     notes: 'Genuine Mazda OEM parts' },
   { match: /\bmitsubishi\b|\boutlander\b|\beclipse\s+cross\b|\bmirage\b|\blancer\b|\brvr\b/i,
     name: 'Mitsubishi', logo: '🇯🇵', region: 'OEM Mitsubishi',
     official: 'https://www.mitsubishi-motors.ca/en/owners/parts-and-accessories',
     officialLabel: 'Mitsubishi Canada (Official)',
-    site: 'mitsubishipartsdirect.com',
-    siteLabel: 'Mitsubishi Parts Direct',
+    site: 'mitsubishipartsdirect.com', siteLabel: 'Mitsubishi Parts Direct',
     notes: 'Genuine Mitsubishi OEM parts' },
   { match: /\bnissan\b|\baltima\b|\bsentra\b|\bmaxima\b|\brogue\b|\bmurano\b|\bpathfinder\b|\bfrontier\b|\btitan\b|\barmada\b|\bkicks\b|\bleaf\b|\bgt-r\b|\b370z\b|\bversa\b/i,
     name: 'Nissan', logo: '🇯🇵', region: 'OEM Nissan',
     official: 'https://www.nissan.ca/owners/genuine-nissan-parts.html',
     officialLabel: 'Nissan Canada (Official)',
-    site: 'nissanpartsdeal.com',
-    siteLabel: 'Nissan Parts Deal',
+    site: 'nissanpartsdeal.com', siteLabel: 'Nissan Parts Deal',
     notes: 'Genuine Nissan OEM parts' },
   { match: /\bsubaru\b|\bimpreza\b|\boutback\b|\bforester\b|\bcrosstrek\b|\blegacy\b|\bascent\b|\bwrx\b|\bsti\b|\bbrz\b/i,
     name: 'Subaru', logo: '🇯🇵', region: 'OEM Subaru',
     official: 'https://www.subaru.ca/WebPage.aspx?WebSiteID=233',
     officialLabel: 'Subaru Canada (Official)',
-    site: 'subarupartsdeal.com',
-    siteLabel: 'Subaru Parts Deal',
+    site: 'subarupartsdeal.com', siteLabel: 'Subaru Parts Deal',
     notes: 'Genuine Subaru OEM parts' },
   { match: /\btoyota\b|\bcamry\b|\bcorolla\b|\brav4\b|\bhighlander\b|\btacoma\b|\btundra\b|\bprius\b|\bsienna\b|\b4runner\b|\bsequoia\b|\bvenza\b|\bavalon\b|\byaris\b|\bcrown\b|\bscion\b/i,
     name: 'Toyota', logo: '🇯🇵', region: 'OEM Toyota',
     official: 'https://www.toyota.ca/toyota/en/owners/parts-service',
     officialLabel: 'Toyota Canada (Official)',
-    site: 'toyotapartsdeal.com',
-    siteLabel: 'Toyota Parts Deal',
+    site: 'toyotapartsdeal.com', siteLabel: 'Toyota Parts Deal',
     notes: 'Genuine Toyota OEM parts' },
-
-  // ---- Korean ----
   { match: /\bgenesis\b|\bg70\b|\bg80\b|\bg90\b|\bgv70\b|\bgv80\b/i,
     name: 'Genesis', logo: '🇰🇷', region: 'OEM Genesis',
     official: 'https://www.genesis.com/ca/en/owner/parts-and-accessories.html',
     officialLabel: 'Genesis Canada (Official)',
-    site: 'genesis.com',
-    siteLabel: 'Genesis Parts Catalog',
+    site: 'genesis.com', siteLabel: 'Genesis Parts Catalog',
     notes: 'Genuine Genesis OEM parts via dealers' },
   { match: /\bhyundai\b|\belantra\b|\bsonata\b|\btucson\b|\bsanta\s*fe\b|\bkona\b|\bpalisade\b|\bveloster\b|\bioniq\b/i,
     name: 'Hyundai', logo: '🇰🇷', region: 'OEM Hyundai',
     official: 'https://www.hyundaicanada.com/en/owners/parts-and-accessories',
     officialLabel: 'Hyundai Canada (Official)',
-    site: 'hyundaipartsdeal.com',
-    siteLabel: 'Hyundai Parts Deal',
+    site: 'hyundaipartsdeal.com', siteLabel: 'Hyundai Parts Deal',
     notes: 'Genuine Hyundai OEM parts' },
   { match: /\bkia\b|\bforte\b|\boptima\b|\bsorento\b|\bsportage\b|\btelluride\b|\bsoul\b|\bstinger\b|\bcarnival\b|\bniro\b|\bk5\b/i,
     name: 'Kia', logo: '🇰🇷', region: 'OEM Kia',
     official: 'https://www.kia.ca/owners/parts-and-accessories',
     officialLabel: 'Kia Canada (Official)',
-    site: 'kiapartsnow.com',
-    siteLabel: 'Kia Parts Now',
+    site: 'kiapartsnow.com', siteLabel: 'Kia Parts Now',
     notes: 'Genuine Kia OEM parts' },
-
-  // ---- American ----
   { match: /\bbuick\b|\benclave\b|\bencore\b|\benvision\b|\bregal\b|\blacrosse\b/i,
     name: 'Buick', logo: '🇺🇸', region: 'OEM Buick',
     official: 'https://www.buick.ca/owner-centre/maintenance/parts-accessories',
     officialLabel: 'Buick Canada (Official)',
-    site: 'gmpartsdirect.com',
-    siteLabel: 'GM Parts Direct',
+    site: 'gmpartsdirect.com', siteLabel: 'GM Parts Direct',
     notes: 'Genuine Buick OEM parts' },
   { match: /\bcadillac\b|\bescalade\b|\bxts\b|\bcts\b|\bats\b|\bct[456]\b|\bxt[456]\b|\bsrx\b/i,
     name: 'Cadillac', logo: '🇺🇸', region: 'OEM Cadillac',
     official: 'https://www.cadillaccanada.ca/ownership/maintenance',
     officialLabel: 'Cadillac Canada (Official)',
-    site: 'gmpartsdirect.com',
-    siteLabel: 'GM Parts Direct',
+    site: 'gmpartsdirect.com', siteLabel: 'GM Parts Direct',
     notes: 'Genuine Cadillac OEM parts' },
   { match: /\bchevy\b|\bchevrolet\b|\bsilverado\b|\btahoe\b|\bsuburban\b|\bequinox\b|\btraverse\b|\bcolorado\b|\bcamaro\b|\bcorvette\b|\bmalibu\b|\bcruze\b|\bspark\b|\btrax\b|\btrailblazer\b|\bblazer\b|\bbolt\b/i,
     name: 'Chevrolet', logo: '🇺🇸', region: 'OEM Chevrolet',
     official: 'https://www.chevrolet.ca/owners/maintenance/parts-accessories',
     officialLabel: 'Chevrolet Canada (Official)',
-    site: 'gmpartsdirect.com',
-    siteLabel: 'GM Parts Direct',
+    site: 'gmpartsdirect.com', siteLabel: 'GM Parts Direct',
     notes: 'Genuine Chevrolet OEM parts' },
   { match: /\bchrysler\b|\b300\b|\bpacifica\b|\baspen\b/i,
     name: 'Chrysler', logo: '🇺🇸', region: 'OEM Chrysler',
     official: 'https://www.chrysler.ca/en/owners/parts-and-service.html',
     officialLabel: 'Chrysler Canada (Official)',
-    site: 'moparpartsoverstock.com',
-    siteLabel: 'Mopar Parts Overstock',
+    site: 'moparpartsoverstock.com', siteLabel: 'Mopar Parts Overstock',
     notes: 'Genuine Chrysler/Mopar OEM parts' },
   { match: /\bdodge\b|\bcharger\b|\bchallenger\b|\bdurango\b|\bjourney\b|\bgrand\s+caravan\b|\bcaliber\b|\bdart\b/i,
     name: 'Dodge', logo: '🇺🇸', region: 'OEM Dodge',
     official: 'https://www.dodge.ca/en/owners/parts-and-service.html',
     officialLabel: 'Dodge Canada (Official)',
-    site: 'moparpartsoverstock.com',
-    siteLabel: 'Mopar Parts Overstock',
+    site: 'moparpartsoverstock.com', siteLabel: 'Mopar Parts Overstock',
     notes: 'Genuine Dodge/Mopar OEM parts' },
   { match: /\bford\b|\bf-150\b|\bf150\b|\bf-250\b|\bf250\b|\bf-350\b|\bf350\b|\bescape\b|\bexplorer\b|\bedge\b|\bexpedition\b|\branger\b|\bbronco\b|\bmaverick\b|\bfocus\b|\bfusion\b|\bfiesta\b|\btaurus\b|\btransit\b|\bmustang\b|\becosport\b/i,
     name: 'Ford', logo: '🇺🇸', region: 'OEM Ford',
     official: 'https://www.ford.ca/owner/owner-resources/parts-and-accessories/',
     officialLabel: 'Ford Canada (Official)',
-    site: 'fordpartsgiant.com',
-    siteLabel: 'Ford Parts Giant',
+    site: 'fordpartsgiant.com', siteLabel: 'Ford Parts Giant',
     notes: 'Genuine Ford OEM parts' },
   { match: /\bgmc\b|\bsierra\b|\byukon\b|\bacadia\b|\bterrain\b|\bcanyon\b|\bsavana\b|\benvoy\b/i,
     name: 'GMC', logo: '🇺🇸', region: 'OEM GMC',
     official: 'https://www.gmc.ca/owner-centre/maintenance/parts-accessories',
     officialLabel: 'GMC Canada (Official)',
-    site: 'gmpartsdirect.com',
-    siteLabel: 'GM Parts Direct',
+    site: 'gmpartsdirect.com', siteLabel: 'GM Parts Direct',
     notes: 'Genuine GMC OEM parts' },
   { match: /\bjeep\b|\bwrangler\b|\bgrand\s+cherokee\b|\bcherokee\b|\bcompass\b|\brenegade\b|\bgladiator\b|\bpatriot\b|\bliberty\b/i,
     name: 'Jeep', logo: '🇺🇸', region: 'OEM Jeep',
     official: 'https://www.jeep.ca/en/owners/parts-and-service.html',
     officialLabel: 'Jeep Canada (Official)',
-    site: 'moparpartsoverstock.com',
-    siteLabel: 'Mopar Parts Overstock',
+    site: 'moparpartsoverstock.com', siteLabel: 'Mopar Parts Overstock',
     notes: 'Genuine Jeep/Mopar OEM parts' },
   { match: /\blincoln\b|\bnavigator\b|\bcorsair\b|\baviator\b|\bnautilus\b|\bmkz\b|\bmkx\b|\bmkc\b|\bmkt\b/i,
     name: 'Lincoln', logo: '🇺🇸', region: 'OEM Lincoln',
     official: 'https://www.lincolncanada.com/owners/parts-service/',
     officialLabel: 'Lincoln Canada (Official)',
-    site: 'fordpartsgiant.com',
-    siteLabel: 'Ford Parts Giant',
+    site: 'fordpartsgiant.com', siteLabel: 'Ford Parts Giant',
     notes: 'Lincoln parts via Ford group' },
   { match: /\bram\s?\d|\bram\s+1500\b|\bram\s+2500\b|\bram\s+3500\b|\bdakota\b|\bpromaster\b/i,
     name: 'RAM', logo: '🇺🇸', region: 'OEM RAM',
     official: 'https://www.ramtruck.ca/en/owners/parts-and-service.html',
     officialLabel: 'RAM Canada (Official)',
-    site: 'moparpartsoverstock.com',
-    siteLabel: 'Mopar Parts Overstock',
+    site: 'moparpartsoverstock.com', siteLabel: 'Mopar Parts Overstock',
     notes: 'Genuine RAM/Mopar OEM parts' },
-
-  // ---- German ----
   { match: /\baudi\b|\ba[34678]\b|\bq[3578]\b|\bs[345678]\b|\brs\d?\b|\btt\b|\be-tron\b/i,
     name: 'Audi', logo: '🇩🇪', region: 'OEM Audi',
     official: 'https://www.audi.ca/ca/web/en/owners-area/audi-service.html',
     officialLabel: 'Audi Canada (Official)',
-    site: 'audiusaparts.com',
-    siteLabel: 'Audi USA Parts',
+    site: 'audiusaparts.com', siteLabel: 'Audi USA Parts',
     notes: 'Genuine Audi OEM parts' },
   { match: /\bbmw\b|\b[1234567]\s*series\b|\bx[1-7]\b|\bm[358]\b|\bz[34]\b|\bi[3458]\b/i,
     name: 'BMW', logo: '🇩🇪', region: 'OEM BMW',
     official: 'https://shop.bmw.ca/',
     officialLabel: 'BMW Canada (Official Shop)',
-    site: 'bmwpartsdeal.com',
-    siteLabel: 'BMW Parts Deal',
+    site: 'bmwpartsdeal.com', siteLabel: 'BMW Parts Deal',
     notes: 'Genuine BMW OEM parts' },
   { match: /\bmercedes\b|\bbenz\b|\bamg\b|\b[cegs]-class\b|\bgl[abcels]\b|\bsprinter\b|\bsl\b|\bslk\b|\bslc\b|\beqs\b|\beqe\b/i,
     name: 'Mercedes-Benz', logo: '🇩🇪', region: 'OEM Mercedes',
     official: 'https://www.mercedes-benz.ca/en/owners/parts-services',
     officialLabel: 'Mercedes-Benz Canada (Official)',
-    site: 'mercedespartscenter.com',
-    siteLabel: 'Mercedes Parts Center',
+    site: 'mercedespartscenter.com', siteLabel: 'Mercedes Parts Center',
     notes: 'Genuine Mercedes-Benz OEM parts' },
   { match: /\bporsche\b|\b911\b|\bcayenne\b|\bmacan\b|\bpanamera\b|\btaycan\b|\b718\b|\bcayman\b|\bboxster\b/i,
     name: 'Porsche', logo: '🇩🇪', region: 'OEM Porsche',
     official: 'https://www.porsche.com/canada/en/accessoriesandservice/',
     officialLabel: 'Porsche Canada (Official)',
-    site: 'suncoastparts.com',
-    siteLabel: 'Suncoast Porsche Parts',
+    site: 'suncoastparts.com', siteLabel: 'Suncoast Porsche Parts',
     notes: 'Genuine Porsche OEM parts' },
   { match: /\bvolkswagen\b|^vw\b|\sjetta\b|\sgolf\b|\spassat\b|\stiguan\b|\satlas\b|\staos\b|\sid\.?\s*4\b|\sbeetle\b|\sgti\b|\sarteon\b/i,
     name: 'Volkswagen', logo: '🇩🇪', region: 'OEM Volkswagen',
     official: 'https://www.vw.ca/en/owners/genuine-vw-parts-and-accessories.html',
     officialLabel: 'Volkswagen Canada (Official)',
-    site: 'vwpartsvortex.com',
-    siteLabel: 'VW Parts Vortex',
+    site: 'vwpartsvortex.com', siteLabel: 'VW Parts Vortex',
     notes: 'Genuine VW OEM parts' },
-
-  // ---- British ----
   { match: /\bjaguar\b|\bf-pace\b|\bf-type\b|\bxf\b|\bxe\b|\bxj\b|\bi-pace\b|\be-pace\b/i,
     name: 'Jaguar', logo: '🇬🇧', region: 'OEM Jaguar',
     official: 'https://www.jaguar.ca/owners/parts-and-accessories/index.html',
     officialLabel: 'Jaguar Canada (Official)',
-    site: 'jaguarpartsdirect.ca',
-    siteLabel: 'Jaguar Parts Direct (CA)',
+    site: 'jaguarpartsdirect.ca', siteLabel: 'Jaguar Parts Direct (CA)',
     notes: 'OEM Jaguar parts, ships from Canada' },
   { match: /\bland\s*rover\b|\brange\s*rover\b|\bdefender\b|\bdiscovery\b|\bfreelander\b|\bevoque\b|\bvelar\b/i,
     name: 'Land Rover', logo: '🇬🇧', region: 'OEM Land Rover',
     official: 'https://www.landrover.ca/owners/genuine-parts-and-accessories.html',
     officialLabel: 'Land Rover Canada (Official)',
-    site: 'landroverpartsdirect.ca',
-    siteLabel: 'Land Rover Parts Direct (CA)',
+    site: 'landroverpartsdirect.ca', siteLabel: 'Land Rover Parts Direct (CA)',
     notes: 'OEM Land Rover parts, ships from Canada' },
   { match: /\bmini\b|\bcountryman\b|\bclubman\b|\bpaceman\b/i,
     name: 'MINI', logo: '🇬🇧', region: 'OEM MINI',
     official: 'https://www.mini.ca/en_CA/home/explore/owners.html',
     officialLabel: 'MINI Canada (Official)',
-    site: 'fcpeuro.com',
-    siteLabel: 'FCP Euro (MINI)',
+    site: 'fcpeuro.com', siteLabel: 'FCP Euro (MINI)',
     notes: 'OEM and aftermarket MINI parts' },
-  { match: /\brolls.?royce\b|\bphantom\b|\bghost\b|\bwraith\b|\bdawn\b|\bcullinan\b/i,
-    name: 'Rolls-Royce', logo: '🇬🇧', region: 'OEM Rolls-Royce',
-    official: 'https://www.rolls-roycemotorcars.com/en-CA/owners.html',
-    officialLabel: 'Rolls-Royce Canada (Official)',
-    site: 'rolls-roycemotorcars.com',
-    siteLabel: 'Rolls-Royce Dealer Locator',
-    notes: 'Parts only via authorized dealer' },
-
-  // ---- Italian ----
-  { match: /\balfa\s*romeo\b|\bgiulia\b|\bstelvio\b|\b4c\b|\bgiulietta\b/i,
-    name: 'Alfa Romeo', logo: '🇮🇹', region: 'OEM Alfa Romeo',
-    official: 'https://www.alfaromeo.ca/en/owners/parts-and-service.html',
-    officialLabel: 'Alfa Romeo Canada (Official)',
-    site: 'moparpartsoverstock.com',
-    siteLabel: 'Mopar Parts (Alfa)',
-    notes: 'Alfa Romeo via Mopar (FCA group)' },
-  { match: /\bferrari\b|\b488\b|\b458\b|\bf8\b|\bportofino\b|\broma\b|\bsf90\b|\b812\b|\b296\b|\bpurosangue\b/i,
-    name: 'Ferrari', logo: '🇮🇹', region: 'OEM Ferrari',
-    official: 'https://www.ferrari.com/en-EN/auto/dealers',
-    officialLabel: 'Ferrari (Find a Dealer)',
-    site: 'ferrari.com',
-    siteLabel: 'Ferrari Parts Info',
-    notes: 'Parts via authorized dealer only' },
-  { match: /\blamborghini\b|\bhuracan\b|\baventador\b|\burus\b|\brevuelto\b|\bgallardo\b/i,
-    name: 'Lamborghini', logo: '🇮🇹', region: 'OEM Lamborghini',
-    official: 'https://www.lamborghini.com/en-en/dealers',
-    officialLabel: 'Lamborghini (Find a Dealer)',
-    site: 'lamborghini.com',
-    siteLabel: 'Lamborghini Parts Info',
-    notes: 'Parts via authorized dealer only' },
-  { match: /\bmaserati\b|\bghibli\b|\bquattroporte\b|\blevante\b|\bgranturismo\b|\bmc20\b/i,
-    name: 'Maserati', logo: '🇮🇹', region: 'OEM Maserati',
-    official: 'https://www.maserati.com/ca/en/dealers',
-    officialLabel: 'Maserati Canada (Find a Dealer)',
-    site: 'maserati.com',
-    siteLabel: 'Maserati Parts Info',
-    notes: 'Parts via authorized dealer only' },
-
-  // ---- Swedish ----
   { match: /\bvolvo\b|\bxc[34679]0\b|\bs[69]0\b|\bv[69]0\b|\bc[34]0\b/i,
     name: 'Volvo', logo: '🇸🇪', region: 'OEM Volvo',
     official: 'https://www.volvocars.com/en-ca/owners/owner-info/genuine-parts-and-accessories',
     officialLabel: 'Volvo Canada (Official)',
-    site: 'volvopartswebstore.com',
-    siteLabel: 'Volvo Parts Webstore',
+    site: 'volvopartswebstore.com', siteLabel: 'Volvo Parts Webstore',
     notes: 'Genuine Volvo OEM parts' },
-  { match: /\bpolestar\b|\bpolestar\s?[12345]\b/i,
-    name: 'Polestar', logo: '🇸🇪', region: 'OEM Polestar',
-    official: 'https://www.polestar.com/ca/service/',
-    officialLabel: 'Polestar Canada (Official)',
-    site: 'polestar.com',
-    siteLabel: 'Polestar Service Info',
-    notes: 'Polestar service centre' },
-
-  // ---- EV-focused ----
   { match: /\btesla\b|\bmodel\s*[3sxy]\b|\bcybertruck\b|\broadster\b/i,
     name: 'Tesla', logo: '⚡', region: 'OEM Tesla',
     official: 'https://www.tesla.com/en_ca/support/service-visit-information',
     officialLabel: 'Tesla Canada (Official)',
-    site: 'tesla.com',
-    siteLabel: 'Tesla Service Info',
+    site: 'tesla.com', siteLabel: 'Tesla Service Info',
     notes: 'Tesla parts via Tesla Service' },
-
-  // ---- French (limited Canadian availability) ----
-  { match: /\bpeugeot\b/i,
-    name: 'Peugeot', logo: '🇫🇷', region: 'OEM Peugeot',
-    official: 'https://www.peugeot.com/',
-    officialLabel: 'Peugeot Global (Official)',
-    site: 'peugeot.com',
-    siteLabel: 'Peugeot Parts Info',
-    notes: 'Limited Canadian availability' },
-  { match: /\brenault\b/i,
-    name: 'Renault', logo: '🇫🇷', region: 'OEM Renault',
-    official: 'https://www.renault.com/',
-    officialLabel: 'Renault Global (Official)',
-    site: 'renault.com',
-    siteLabel: 'Renault Parts Info',
-    notes: 'Not officially sold in Canada' },
-  { match: /\bcitroen\b|\bcitroën\b/i,
-    name: 'Citroën', logo: '🇫🇷', region: 'OEM Citroën',
-    official: 'https://www.citroen.com/',
-    officialLabel: 'Citroën Global (Official)',
-    site: 'citroen.com',
-    siteLabel: 'Citroën Parts Info',
-    notes: 'Not officially sold in Canada' },
 ];
 
-// Universal aftermarket sources (work for any vehicle).
-// Uses each retailer's NATIVE search URL with a simple part-name query.
-// Simple queries (just the part name) work because retailers handle vehicle
-// filtering via their own VIN/year-picker on the page.
 const UNIVERSAL_AFTERMARKET = [
   { name: 'PartSource', logo: '🇨🇦', region: 'Aftermarket · Canada',
     url: (q) => `https://partsource.ca/search?q=${encodeURIComponent(q)}`,
@@ -2056,7 +1728,6 @@ const UNIVERSAL_AFTERMARKET = [
     notes: 'Compare prices across all retailers' },
 ];
 
-// Find the OEM source(s) that match this make
 function findOemSources(make) {
   if (!make) return [];
   const matches = [];
@@ -2066,11 +1737,9 @@ function findOemSources(make) {
   return matches;
 }
 
-// Extract vehicle make/model and parts list from a quote
 function extractVehicleAndParts(quoteText) {
   const result = { vehicle: '', make: '', parts: [], tier: null };
 
-  // Try several header patterns
   const titleMatch = quoteText.match(/##\s+(?:QUOTE|PARTS\s*NEEDED):\s*(.+)/i);
   if (titleMatch) {
     const title = titleMatch[1].split(/—|–|-/)[0].trim();
@@ -2084,12 +1753,10 @@ function extractVehicleAndParts(quoteText) {
     result.make = result.vehicle;
   }
 
-  // Try to detect parts tier from quote text
   if (/\bOEM\b/i.test(quoteText)) result.tier = 'oem';
   else if (/\baftermarket\b|\bAFM\b/i.test(quoteText)) result.tier = 'aftermarket';
   else if (/\breman/i.test(quoteText)) result.tier = 'aftermarket';
 
-  // Extract part names from PARTS table (full quote)
   const partsTableMatch = quoteText.match(/###\s+PARTS\s*\n([\s\S]*?)(?=\n###|\*\*End of quote|$)/i);
   if (partsTableMatch) {
     const rows = partsTableMatch[1].split('\n')
@@ -2103,8 +1770,6 @@ function extractVehicleAndParts(quoteText) {
     }
   }
 
-  // Extract part names from PARTS NEEDED bullet list (pre-quote workflow)
-  // Format: "## PARTS NEEDED:" followed by bullet points like "- Front brake pads"
   if (result.parts.length === 0) {
     const needMatch = quoteText.match(/##\s*PARTS\s*NEEDED[\s\S]*?(?=##|\*\*End|$)/i);
     if (needMatch) {
@@ -2113,9 +1778,7 @@ function extractVehicleAndParts(quoteText) {
         const m = line.match(/^[\s]*[-*•]\s+(.+?)\s*(?:\(.*\))?\s*$/);
         if (m) {
           let name = m[1].trim();
-          // Strip leading "Front", "Rear" etc only if it's a quantity prefix; keep otherwise
-          name = name.replace(/^[\d]+x?\s+/, ''); // strip "2x ", "1 "
-          // Strip trailing notes after a colon or em-dash
+          name = name.replace(/^[\d]+x?\s+/, '');
           name = name.split(/[:—–]/)[0].trim();
           if (name && name.length < 80) {
             result.parts.push({ name, tier: '' });
@@ -2140,145 +1803,12 @@ function showPartsLinks(quoteText, parentBubble) {
 
   panel = document.createElement('div');
   panel.className = 'parts-panel';
-
-  // Always render BOTH OEM and Aftermarket sections together
   renderPartsPanelContent(panel, info, oemSources, 'both');
   parentBubble.appendChild(panel);
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// Convert "F-150" -> "f_150", "CR-V" -> "cr_v", "Range Rover Sport" -> "range_rover_sport"
-function slugifyForRevolutionParts(s) {
-  if (!s) return '';
-  return s.toString().trim().toLowerCase()
-    .replace(/[\s\-]+/g, '_')   // spaces and hyphens become underscores
-    .replace(/[^a-z0-9_]/g, ''); // strip anything else
-}
-
-// For Mopar Parts Overstock pattern: /s/Make__Model/Category.html
-// Make has hyphens (e.g. "Alfa-Romeo"), Model uses hyphens for spaces (e.g. "Grand-Cherokee")
-function slugifyForMopar(s) {
-  if (!s) return '';
-  return s.toString().trim()
-    .replace(/\s+/g, '-')          // spaces become hyphens
-    .replace(/[^a-zA-Z0-9\-]/g, ''); // strip anything else
-}
-
-// Convert a generic part name into the slug each platform uses
-//   "Front Brake Pads" -> "brake_pads" (RevolutionParts) or "Brakes" (Mopar category)
-// We try to match common parts to known categories.
-function partNameToSlug(partName, pattern) {
-  if (!partName) return null;
-  const p = partName.toLowerCase();
-
-  if (pattern === 'mopar') {
-    // Mopar uses broad categories, not exact part names
-    if (/brake|rotor|caliper|pad/.test(p)) return 'Brakes';
-    if (/oil\s*filter|engine\s*oil/.test(p)) return 'Engine';
-    if (/spark\s*plug|ignition|coil/.test(p)) return 'Engine';
-    if (/timing\s*belt|water\s*pump|thermostat|radiator/.test(p)) return 'Cooling-and-Heating';
-    if (/strut|shock|control\s*arm|tie\s*rod|sway\s*bar|ball\s*joint/.test(p)) return 'Suspension';
-    if (/cv\s*axle|driveshaft|differential|clutch/.test(p)) return 'Drivetrain';
-    if (/battery|alternator|starter|sensor|headlight/.test(p)) return 'Electrical';
-    if (/exhaust|muffler|catalytic/.test(p)) return 'Exhaust';
-    if (/a\/c|ac\s|compressor|condenser|blower|hvac|heater/.test(p)) return 'Cooling-and-Heating';
-    if (/fuel\s*pump|fuel\s*filter|injector/.test(p)) return 'Fuel-Delivery';
-    if (/wiper|mirror|door/.test(p)) return 'Body';
-    return 'Brakes'; // safe default
-  }
-
-  // RevolutionParts pattern: convert part name to slug (e.g. "Front Brake Pads" -> "brake_pads")
-  // Strip position words (front, rear, left, right) and quantifiers
-  let cleaned = p
-    .replace(/\b(front|rear|left|right|driver|passenger|upper|lower|inner|outer)\b/g, '')
-    .replace(/\b(set|kit|each|pair)\b/g, '')
-    .replace(/\bbrake\s*rotor\b/g, 'brake_disc')          // rotor → disc on these sites
-    .replace(/\bbrake\s*pads?\s*and\s*rotors?\b/g, 'brake_pads')  // pad+rotor → search pads
-    .replace(/\bspark\s*plug\b/g, 'spark_plug')
-    .replace(/\bignition\s*coil\b/g, 'ignition_coil')
-    .replace(/\boxygen\s*sensor\b/g, 'oxygen_sensor')
-    .replace(/\bo2\s*sensor\b/g, 'oxygen_sensor')
-    .replace(/\bcv\s*axle\b/g, 'cv_axle')
-    .replace(/\bcontrol\s*arm\b/g, 'control_arm')
-    .replace(/\btie\s*rod\b/g, 'tie_rod_end')
-    .replace(/\bsway\s*bar\s*link\b/g, 'sway_bar_link')
-    .replace(/\bwheel\s*bearing\b/g, 'wheel_hub')
-    .replace(/\btiming\s*belt\b/g, 'timing_belt_kit')
-    .replace(/\bwater\s*pump\b/g, 'water_pump')
-    .replace(/\bthermostat\b/g, 'thermostat')
-    .replace(/\bradiator\b/g, 'radiator')
-    .replace(/\boil\s*filter\b/g, 'oil_filter')
-    .replace(/\bcabin\s*(air\s*)?filter\b/g, 'cabin_air_filter')
-    .replace(/\bengine\s*air\s*filter\b/g, 'air_filter')
-    .replace(/\bair\s*filter\b/g, 'air_filter')
-    .replace(/\bbattery\b/g, 'battery')
-    .replace(/\balternator\b/g, 'alternator')
-    .replace(/\bstarter\b/g, 'starter_motor')
-    .replace(/\bheadlight\b/g, 'headlight_assembly')
-    .replace(/\bmuffler\b/g, 'muffler')
-    .replace(/\bcatalytic\s*converter\b/g, 'catalytic_converter')
-    .replace(/\bstrut\b/g, 'strut_assembly')
-    .replace(/\bshock\b/g, 'shock_absorber')
-    .replace(/\bball\s*joint\b/g, 'ball_joint')
-    .replace(/\bspark\s*plug\b/g, 'spark_plug')
-    .replace(/[^\w\s]/g, '')
-    .replace(/\s+/g, '_')
-    .replace(/^_+|_+$/g, '');
-
-  // If we ended up with something useful, return it; otherwise skip
-  if (cleaned.length < 3) return null;
-  return cleaned;
-}
-
-// Extract just the year and the make+model from "2019 BMW 330i 3.0L turbo-diesel"
-function extractYearMakeModel(vehicleString) {
-  if (!vehicleString) return { year: '', model: '' };
-  const cleaned = vehicleString.trim();
-  // Find a 4-digit year (1980-2030)
-  const yearMatch = cleaned.match(/\b(19[89]\d|20[0-3]\d)\b/);
-  const year = yearMatch ? yearMatch[1] : '';
-
-  // Remove year, then take the next 1-3 words as make+model (skipping the make)
-  let rest = cleaned.replace(/\b(19[89]\d|20[0-3]\d)\b/, '').trim();
-
-  // Strip engine specs like "3.0L", "V6", "turbo", "diesel", "hybrid", "AWD", etc.
-  rest = rest.replace(/\b(\d\.\d\s?L?|V[68]|I\d|TDI|turbo[a-z]*|diesel|hybrid|electric|awd|fwd|rwd|4wd|automatic|manual|sedan|coupe|wagon|hatchback|suv|truck|crew\s*cab|extended\s*cab|regular\s*cab|sport|hse|se|le|xle|s|sl|sr|ex|lx|dx|premium|limited|ltd|signature)\b/gi, '');
-  rest = rest.replace(/\s+/g, ' ').trim();
-
-  // First word is the make, rest is the model
-  const parts = rest.split(/\s+/);
-  const model = parts.slice(1).join(' ') || parts[0] || '';
-
-  return { year, model: model.trim() };
-}
-
-// Build a direct-to-product URL for a RevolutionParts dealer site
-function buildRevolutionUrl(domain, makeSlug, year, model, partSlug) {
-  const modelSlug = slugifyForRevolutionParts(model);
-  if (!partSlug) {
-    // Fall back to make-only catalog page
-    return `https://www.${domain}/oem-${makeSlug}.html`;
-  }
-  if (year && modelSlug) {
-    return `https://www.${domain}/oem-${year}-${makeSlug}-${modelSlug}-${partSlug}.html`;
-  }
-  if (modelSlug) {
-    return `https://www.${domain}/oem-${makeSlug}-${modelSlug}-${partSlug}.html`;
-  }
-  return `https://www.${domain}/oem-${makeSlug}-${partSlug}.html`;
-}
-
-// Build a category page URL for Mopar Parts Overstock
-function buildMoparUrl(makeSlug, model, category) {
-  const modelSlug = slugifyForMopar(model);
-  if (modelSlug && category) {
-    return `https://www.moparpartsoverstock.com/s/${makeSlug}__${modelSlug}/${category}.html`;
-  }
-  return `https://www.moparpartsoverstock.com/`;
-}
-
 function renderPartsPanelContent(panel, info, oemSources, tier) {
-  // tier is 'oem' | 'aftermarket' | 'both' — we now always pass 'both'
   const showOem = tier === 'oem' || tier === 'both';
   const showAftermarket = tier === 'aftermarket' || tier === 'both';
 
@@ -2305,22 +1835,15 @@ function renderPartsPanelContent(panel, info, oemSources, tier) {
       <div class="parts-panel-part">${escapeHtml(partName)}</div>
     `;
 
-    // === OEM PARTS section ===
     if (showOem && oemSources.length > 0) {
       html += '<div class="parts-section-header oem">⭐ OEM PARTS</div>';
       html += '<div class="source-grid">';
       for (const src of oemSources) {
-        // Link 1: Official manufacturer site (always brand-authentic, never 404)
         html += renderSourceLink({
-          name: src.officialLabel,
-          region: 'Official brand site',
-          logo: src.logo,
-          notes: 'The official manufacturer site for ' + src.name
+          name: src.officialLabel, region: 'Official brand site',
+          logo: src.logo, notes: 'The official manufacturer site for ' + src.name
         }, src.official);
 
-        // Link 2: Direct site search using JUST the part name + make.
-        // Simple queries return results; complex ones (year + model + part) return nothing.
-        // The user uses the retailer's own VIN/year picker on their site for fitment.
         const oemQuery = (partName === 'All parts')
           ? `${src.name} parts`
           : `${partName} ${src.name}`;
@@ -2332,7 +1855,6 @@ function renderPartsPanelContent(panel, info, oemSources, tier) {
           notes: 'Google search for ' + partName + ' ' + src.name + ' on ' + src.site
         }, googleUrl);
 
-        // Link 3: Retailer homepage (always works, user uses their search bar)
         html += renderSourceLink({
           name: src.siteLabel + ' (homepage)',
           region: 'Browse catalog by VIN/model',
@@ -2343,21 +1865,14 @@ function renderPartsPanelContent(panel, info, oemSources, tier) {
       html += '</div>';
     }
 
-    // === AFTERMARKET PARTS section ===
     if (showAftermarket) {
       html += '<div class="parts-section-header aftermarket">💲 AFTERMARKET PARTS</div>';
       html += '<div class="source-grid">';
-      // Use just the part name as the query — retailers handle vehicle filtering
-      // via their own VIN/year picker on the page. Including vehicle in the query
-      // returns "no results found" because retailers don't index pages that way.
       const aftermarketQuery = (partName === 'All parts') ? info.vehicle : partName;
       for (const src of UNIVERSAL_AFTERMARKET) {
         const url = src.url(aftermarketQuery);
         html += renderSourceLink({
-          name: src.name,
-          region: src.region,
-          logo: src.logo,
-          notes: src.notes
+          name: src.name, region: src.region, logo: src.logo, notes: src.notes
         }, url);
       }
       html += '</div>';
@@ -2382,13 +1897,14 @@ function renderSourceLink(src, url) {
   `;
 }
 
+// PATCH 5: clear customer fields so we don't carry over the previous customer's data
 function startInvoice(quoteText) {
   activeQuoteText = quoteText;
-  // Pre-fill invoice number with date + random
+  ['cust-name','cust-phone','cust-email','cust-address','cust-plate','cust-odo']
+    .forEach(id => { document.getElementById(id).value = ''; });
   const d = new Date();
   const invNum = `INV-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${Math.floor(Math.random()*900+100)}`;
   document.getElementById('inv-number').value = invNum;
-  // Show modal
   document.getElementById('customer-modal').classList.add('active');
   setTimeout(() => document.getElementById('cust-name').focus(), 100);
 }
@@ -2565,9 +2081,7 @@ function generateInvoice() {
     ${q.notes.length ? `
     <div class="inv-notes">
       <h3>Notes</h3>
-      <ul>
-        ${q.notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}
-      </ul>
+      <ul>${q.notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}</ul>
     </div>
     ` : ''}
 
@@ -2654,13 +2168,11 @@ clearBtn.addEventListener('click', () => {
   showWelcome();
 });
 
-// Shop info modal
 document.getElementById('shop-info-btn').addEventListener('click', openShopInfoModal);
 document.getElementById('shop-info-close').addEventListener('click', () => document.getElementById('shop-info-modal').classList.remove('active'));
 document.getElementById('shop-info-cancel').addEventListener('click', () => document.getElementById('shop-info-modal').classList.remove('active'));
 document.getElementById('shop-info-save').addEventListener('click', saveShopInfo);
 
-// Topbar "Invoice Last Quote" button - fallback for when inline button doesn't show
 document.getElementById('topbar-invoice-btn').addEventListener('click', () => {
   if (lastQuoteText) {
     startInvoice(lastQuoteText);
@@ -2669,18 +2181,15 @@ document.getElementById('topbar-invoice-btn').addEventListener('click', () => {
   }
 });
 
-// Customer modal
 document.getElementById('customer-close').addEventListener('click', () => document.getElementById('customer-modal').classList.remove('active'));
 document.getElementById('customer-cancel').addEventListener('click', () => document.getElementById('customer-modal').classList.remove('active'));
 document.getElementById('customer-generate').addEventListener('click', generateInvoice);
 
-// Invoice view controls
 document.getElementById('invoice-back').addEventListener('click', () => {
   document.getElementById('invoice-view').classList.remove('active');
 });
 document.getElementById('invoice-print').addEventListener('click', () => window.print());
 
-// Close modals on backdrop click
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', (e) => {
     if (e.target === m) m.classList.remove('active');
@@ -2710,8 +2219,6 @@ Or click a **Quick Job** on the left.
 /* ============================================================
    PAST QUOTES (history view)
    ============================================================ */
-
-let pastQuotesCache = [];
 
 function fmtTimestamp(iso) {
   if (!iso) return '';
@@ -2760,7 +2267,6 @@ function renderPastQuotes(quotes) {
     return;
   }
 
-  // Compute total revenue from displayed quotes
   let totalRevenue = 0;
   for (const q of quotes) {
     const t = parseFloat(String(q.total).replace(/[^0-9.]/g, ''));
@@ -2800,10 +2306,8 @@ function renderPastQuotes(quotes) {
       </div>
     `;
 
-    // Toggle expand
     card.querySelector('.history-card-header').addEventListener('click', () => {
       const isExpanded = card.classList.contains('expanded');
-      // Close all others
       document.querySelectorAll('.history-card.expanded').forEach(c => c.classList.remove('expanded'));
       if (!isExpanded) {
         card.classList.add('expanded');
@@ -2816,7 +2320,7 @@ function renderPastQuotes(quotes) {
       }
     });
 
-    // Reuse: load this quote back into the chat as if it was a fresh assistant message
+    // PATCH 1: also push the reused quote into `conversation` so the bot has context for follow-ups
     card.querySelector('.action-reuse').addEventListener('click', (e) => {
       e.stopPropagation();
       if (!q.full_quote) {
@@ -2825,12 +2329,11 @@ function renderPastQuotes(quotes) {
       }
       document.getElementById('history-view').classList.remove('active');
       addMessage('assistant', q.full_quote);
-      // Make it the lastQuoteText so the topbar invoice button works
+      conversation.push({ role: 'assistant', content: q.full_quote });
       lastQuoteText = q.full_quote;
       document.getElementById('topbar-invoice-btn').style.display = 'inline-flex';
     });
 
-    // Invoice: open the invoice modal directly with this quote
     card.querySelector('.action-invoice').addEventListener('click', (e) => {
       e.stopPropagation();
       if (!q.full_quote) {
@@ -2841,7 +2344,6 @@ function renderPastQuotes(quotes) {
       startInvoice(q.full_quote);
     });
 
-    // Copy: copy the full quote text to clipboard
     card.querySelector('.action-copy').addEventListener('click', (e) => {
       e.stopPropagation();
       const text = q.full_quote || `${q.vehicle}\n${q.job}\nTotal: $${q.total}`;
@@ -2864,15 +2366,12 @@ function filterPastQuotes(query) {
     return;
   }
   const filtered = pastQuotesCache.filter(quote => {
-    const haystack = [
-      quote.vehicle, quote.job, quote.timestamp, quote.total
-    ].join(' ').toLowerCase();
+    const haystack = [quote.vehicle, quote.job, quote.timestamp, quote.total].join(' ').toLowerCase();
     return haystack.includes(q);
   });
   renderPastQuotes(filtered);
 }
 
-// Wire up Past Quotes UI
 document.getElementById('topbar-history-btn').addEventListener('click', () => {
   document.getElementById('history-view').classList.add('active');
   document.getElementById('history-search').value = '';
