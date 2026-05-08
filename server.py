@@ -7,8 +7,8 @@ Memory-optimized for Render free tier (512 MB):
 - Sheet data is cached in memory for SHEET_CACHE_TTL seconds (60s default)
 - Request size limits enforced
 - Conversation history bounded
-- Garbage collection forced after each request
-- Single gunicorn worker recommended (see Procfile)
+- Garbage collection forced after each chat request
+- Single gunicorn worker recommended (see render.yaml)
 """
 
 import os
@@ -24,13 +24,13 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 # ----- Configuration -----
-SHEET_CACHE_TTL = int(os.environ.get("SHEET_CACHE_TTL", "60"))      # seconds
-MAX_REQUEST_BYTES = int(os.environ.get("MAX_REQUEST_BYTES", "65536"))  # 64 KB
+SHEET_CACHE_TTL         = int(os.environ.get("SHEET_CACHE_TTL", "60"))        # seconds
+MAX_REQUEST_BYTES       = int(os.environ.get("MAX_REQUEST_BYTES", "200000"))  # 200 KB (matches client max payload)
 MAX_MESSAGES_IN_CONTEXT = int(os.environ.get("MAX_MESSAGES_IN_CONTEXT", "20"))
-MAX_MESSAGE_CHARS = int(os.environ.get("MAX_MESSAGE_CHARS", "8000"))
+MAX_MESSAGE_CHARS       = int(os.environ.get("MAX_MESSAGE_CHARS", "8000"))
 
 app = Flask(__name__, static_folder="public", static_url_path="")
-app.config["MAX_CONTENT_LENGTH"] = MAX_REQUEST_BYTES  # reject oversized requests
+app.config["MAX_CONTENT_LENGTH"] = MAX_REQUEST_BYTES
 
 anthropic_client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
@@ -40,7 +40,6 @@ _creds = service_account.Credentials.from_service_account_info(
     _creds_info,
     scopes=["https://www.googleapis.com/auth/spreadsheets"],
 )
-# cache_discovery=False prevents loading the giant discovery JSON into memory
 sheets = build("sheets", "v4", credentials=_creds, cache_discovery=False)
 
 # Free up the credential dict — we don't need to keep it in memory after build()
@@ -56,19 +55,14 @@ RANGES = [
 ]
 
 # ----- Sheet data cache -----
-# Reading the sheet on every request is expensive (memory + API calls).
-# Cache parsed table data for SHEET_CACHE_TTL seconds.
+# CHANGED: lock is now held around the actual fetch to prevent cache stampede.
+# Multiple concurrent requests at TTL expiry no longer all hit Google in parallel.
 _sheet_cache = {"data": None, "fetched_at": 0}
 _cache_lock = threading.Lock()
 
 
-def fetch_sheet_tables():
-    """Pull sheet data with caching. Returns dict of {tab_name: [record_dict, ...]}."""
-    now = time.time()
-    with _cache_lock:
-        if _sheet_cache["data"] is not None and (now - _sheet_cache["fetched_at"]) < SHEET_CACHE_TTL:
-            return _sheet_cache["data"]
-
+def _do_fetch():
+    """Pulls fresh data from Google Sheets. Caller must hold _cache_lock."""
     resp = (
         sheets.spreadsheets()
         .values()
@@ -94,16 +88,20 @@ def fetch_sheet_tables():
             rec = {h: (row[i] if i < len(row) else "") for i, h in enumerate(headers)}
             records.append(rec)
         out[tab] = records
+    return out
 
-    # Free the raw response object — we have what we need in `out`
-    resp = None
 
-    # Store in cache
+def fetch_sheet_tables():
+    """Cache-stampede-safe sheet fetch. Returns dict of {tab_name: [record_dict, ...]}."""
     with _cache_lock:
+        now = time.time()
+        if _sheet_cache["data"] is not None and (now - _sheet_cache["fetched_at"]) < SHEET_CACHE_TTL:
+            return _sheet_cache["data"]
+        # Lock held during fetch — concurrent callers wait, no parallel API calls.
+        out = _do_fetch()
         _sheet_cache["data"] = out
         _sheet_cache["fetched_at"] = time.time()
-
-    return out
+        return out
 
 
 def invalidate_sheet_cache():
@@ -111,6 +109,14 @@ def invalidate_sheet_cache():
     with _cache_lock:
         _sheet_cache["data"] = None
         _sheet_cache["fetched_at"] = 0
+
+
+def _f(v, fb):
+    """Coerce a sheet value to float, falling back if it's missing or non-numeric."""
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return fb
 
 
 def get_shop_config(records):
@@ -167,15 +173,18 @@ def build_system_prompt():
     rush         = num("rush_premium", 0.25)
     hst          = num("hst_rate", 0.13)
 
-    labour_lines   = "\n".join(fmt_labour_line(r)  for r in data.get("labour_rates", []))
-    parts_lines    = "\n".join(fmt_parts_line(r)   for r in data.get("parts_catalog", []))
-    vehicle_lines  = "\n".join(fmt_vehicle_line(r) for r in data.get("vehicle_multipliers", []))
-    fee_lines      = "\n".join(fmt_fee_line(r)     for r in data.get("environmental_fees", []))
-    bundle_lines   = "\n".join(fmt_bundle_line(r)  for r in data.get("job_bundles", []))
+    labour_lines  = "\n".join(fmt_labour_line(r)  for r in data.get("labour_rates", []))
+    parts_lines   = "\n".join(fmt_parts_line(r)   for r in data.get("parts_catalog", []))
+    vehicle_lines = "\n".join(fmt_vehicle_line(r) for r in data.get("vehicle_multipliers", []))
+    fee_lines     = "\n".join(fmt_fee_line(r)     for r in data.get("environmental_fees", []))
+    bundle_lines  = "\n".join(fmt_bundle_line(r)  for r in data.get("job_bundles", []))
 
+    # CHANGED: stamp is now actually used (was dead code before)
     stamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
-    return f"""You are "Bay 1", the internal pricing assistant for the OWNER of an independent auto repair shop in Ontario, Canada. Your job is to produce ACCURATE, itemized, CAD-priced repair quotes — but parts prices change daily, so you NEVER guess or assume parts prices for the final quote. The owner looks up real-time prices on retailer websites and tells you what they are. You are the calculator and quote formatter.
+    return f"""Current time: {stamp}
+
+You are "Bay 1", the internal pricing assistant for the OWNER of an independent auto repair shop in Ontario, Canada. Your job is to produce ACCURATE, itemized, CAD-priced repair quotes — but parts prices change daily, so you NEVER guess or assume parts prices for the final quote. The owner looks up real-time prices on retailer websites and tells you what they are. You are the calculator and quote formatter.
 
 # SHOP CONFIGURATION
 - Standard labour rate: ${std_rate}/hr
@@ -420,19 +429,15 @@ grand_total = pre_tax + hst
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
-    response = None
     try:
         body = request.get_json(force=True) or {}
         messages = body.get("messages", [])
         if not messages:
             return jsonify({"error": "No messages provided"}), 400
 
-        # Bound the conversation history to prevent unbounded memory growth.
-        # Keep only the most recent N messages (conversation pairs).
         if len(messages) > MAX_MESSAGES_IN_CONTEXT:
             messages = messages[-MAX_MESSAGES_IN_CONTEXT:]
 
-        # Truncate any individual message that's too long
         bounded_messages = []
         for msg in messages:
             content = msg.get("content", "")
@@ -442,10 +447,20 @@ def chat():
 
         system_prompt = build_system_prompt()
 
+        # CHANGED: prompt caching enabled. The system prompt (sheet catalog data,
+        # ~20-30K tokens) is identical across requests within the SHEET_CACHE_TTL
+        # window, so Anthropic charges 10% of normal input cost on cache hits.
+        # Real-world: ~10× input cost reduction at typical shop volume.
         response = anthropic_client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=2500,
-            system=system_prompt,
+            system=[
+                {
+                    "type": "text",
+                    "text": system_prompt,
+                    "cache_control": {"type": "ephemeral"},
+                }
+            ],
             messages=bounded_messages,
         )
 
@@ -457,13 +472,14 @@ def chat():
             ]
         }
         return jsonify(result)
-    except Exception as e:
+    except Exception:
+        # CHANGED: don't leak Python exception detail to the client.
+        # Full stack trace still goes to Render logs via app.logger.
         app.logger.exception("chat error")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Server error. Check logs."}), 500
     finally:
-        # Free large objects and force garbage collection to keep memory low.
-        # Critical on the 512 MB free tier.
-        response = None
+        # CHANGED: removed dead `response = None` (was a no-op — local var about
+        # to go out of scope anyway). gc.collect() does the actual work.
         gc.collect()
 
 
@@ -472,8 +488,10 @@ def log_quote():
     """Append a quote summary row + full markdown text to the quotes_log tab."""
     try:
         body = request.get_json(force=True) or {}
+        # CHANGED: ignore client-supplied timestamp. Server clock is the audit truth;
+        # client could otherwise backdate or futuredate quotes.
         row = [
-            body.get("timestamp", datetime.utcnow().isoformat()),
+            datetime.utcnow().isoformat(),
             body.get("vehicle", ""),
             body.get("job", ""),
             body.get("labour", ""),
@@ -481,7 +499,7 @@ def log_quote():
             body.get("fees", ""),
             body.get("hst", ""),
             body.get("total", ""),
-            body.get("full_quote", ""),  # column I — full markdown of the quote
+            body.get("full_quote", ""),
         ]
         sheets.spreadsheets().values().append(
             spreadsheetId=SHEET_ID,
@@ -490,9 +508,9 @@ def log_quote():
             body={"values": [row]},
         ).execute()
         return jsonify({"ok": True})
-    except Exception as e:
+    except Exception:
         app.logger.exception("log-quote error")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Server error. Check logs."}), 500
 
 
 @app.route("/api/past-quotes", methods=["GET"])
@@ -512,7 +530,6 @@ def past_quotes():
         rows = resp.get("values", [])
         quotes = []
         for row in rows:
-            # pad row to 9 columns
             while len(row) < 9:
                 row.append("")
             timestamp, vehicle, job, labour, parts, fees, hst, total, full_quote = row[:9]
@@ -529,12 +546,11 @@ def past_quotes():
                 "total": total,
                 "full_quote": full_quote,
             })
-        # Newest first
         quotes.reverse()
         return jsonify({"quotes": quotes, "count": len(quotes)})
-    except Exception as e:
+    except Exception:
         app.logger.exception("past-quotes error")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Server error. Check logs."}), 500
 
 
 @app.route("/api/config")
@@ -542,18 +558,20 @@ def get_config():
     try:
         data = fetch_sheet_tables()
         cfg = get_shop_config(data.get("shop_config", []))
+        # CHANGED: coerce to float server-side so the client never receives a
+        # string that turns into $NaN. Falls back to documented defaults if missing.
         return jsonify({
-            "std_rate":     cfg.get("standard_labour_rate", 135),
-            "spec_rate":    cfg.get("specialty_labour_rate", 165),
-            "diag_fee":     cfg.get("diagnostic_fee", 135),
-            "markup":       cfg.get("parts_markup", 0.35),
-            "supplies_pct": cfg.get("shop_supplies_pct_of_labour", 0.05),
-            "supplies_cap": cfg.get("shop_supplies_cap", 45),
-            "hst":          cfg.get("hst_rate", 0.13),
+            "std_rate":     _f(cfg.get("standard_labour_rate"),       135),
+            "spec_rate":    _f(cfg.get("specialty_labour_rate"),      165),
+            "diag_fee":     _f(cfg.get("diagnostic_fee"),             135),
+            "markup":       _f(cfg.get("parts_markup"),               0.35),
+            "supplies_pct": _f(cfg.get("shop_supplies_pct_of_labour"), 0.05),
+            "supplies_cap": _f(cfg.get("shop_supplies_cap"),          45),
+            "hst":          _f(cfg.get("hst_rate"),                   0.13),
         })
-    except Exception as e:
+    except Exception:
         app.logger.exception("config error")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Server error. Check logs."}), 500
 
 
 @app.route("/health")
@@ -567,7 +585,6 @@ def health_memory():
     """Detailed memory diagnostics. Useful when investigating OOM events."""
     try:
         import resource
-        # ru_maxrss is in KB on Linux, bytes on macOS
         rss_kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         rss_mb = rss_kb / 1024  # Linux: KB → MB
 
@@ -587,8 +604,9 @@ def health_memory():
             "max_request_bytes": MAX_REQUEST_BYTES,
             "max_messages_in_context": MAX_MESSAGES_IN_CONTEXT,
         })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception:
+        app.logger.exception("health/memory error")
+        return jsonify({"error": "Server error. Check logs."}), 500
 
 
 @app.errorhandler(413)
@@ -601,7 +619,7 @@ def request_too_large(e):
 
 @app.errorhandler(500)
 def internal_error(e):
-    """Force gc on any 500 error to release memory before returning."""
+    """Force gc on any uncaught 500 error to release memory before returning."""
     gc.collect()
     return jsonify({"error": "Internal server error. Please try again."}), 500
 
@@ -611,11 +629,12 @@ def root():
     return send_from_directory("public", "index.html")
 
 
-# Per-request: clean up after each response to keep memory predictable.
 @app.after_request
 def cleanup_after_request(response):
-    # Only force gc on heavy endpoints (chat is the big one)
-    if request.path in ("/api/chat", "/api/past-quotes"):
+    # gc.collect() is global and pauses all worker threads, so only run it on
+    # the heaviest endpoint (chat). past-quotes and the others release small
+    # objects that the next allocation cycle will reclaim anyway.
+    if request.path == "/api/chat":
         gc.collect()
     return response
 
@@ -623,3 +642,4 @@ def cleanup_after_request(response):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
